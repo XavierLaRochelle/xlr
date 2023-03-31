@@ -14,18 +14,16 @@ date: "`r Sys.Date()`"
 
 **Avant-propos : comment utiliser ce guide?**
 
+Le format de fichier RMarkdown est extrêmement flexible et, pour s'y retrouver, il faut savoir distinguer ses sous-composantes. Un script RMarkdown peut-être subdivisé en trois types de contenus: l'**entête YAML** (section 1), le **texte** (section 2) et les **blocs** (ou `chunks`) **de code** (section 3).
+
 L'objectif de ce guide est de répertorier toutes les informations dont vous *pourriez* avoir besoin pour rédiger un script RMarkdown. Ainsi, vous n'aurez pas nécessairement besoin d'utiliser *toutes* les petites astuces qui s'y trouvent. Il existe bien entendu des guides plus exhaustifs pour apprendre à utiliser RMarkdown (ex.: [R Markdown: The Definitive Guide](https://bookdown.org/yihui/rmarkdown/) ou [R Markdown Cookbook](https://bookdown.org/yihui/rmarkdown-cookbook/)) mais je tenais à regrouper et vulgariser un sous-ensemble d'éléments que je considère plus essentiels.
 
-Pour parvenir à rédiger vous-même un script RMarkdown, vous devrez lire attentivement les sections principales (1, 2 et 3) et la section 3.1. 
-
-Vous pouvez vous permettre de lire un peu moins attentivement les sous-sections suivantes : 1.1 à 1.3, 2.1 à 2.5. 
-
-Le format de fichier RMarkdown est extrêmement flexible et, pour s'y retrouver, il faut savoir distinguer ses sous-composantes. Un script RMarkdown peut-être subdivisé en trois types de contenus: l'**entête YAML**, le **texte** et les **blocs de code** (`chunks`).
+Pour parvenir à rédiger vous-même un script RMarkdown, je vous conseil de lire attentivement les sections principales (1, 2 et 3) de ce guide ainsi que la section 3.1. Vous pouvez vous permettre de lire un peu moins attentivement les sous-sections 1.1 à 1.3 et 2.1 à 2.5. 
 
 ---
 
 # Entête YAML
-Une entête (donc située au tout début de votre script) de métadonnées facultatives entourée de 3 tirets (`---`). 
+L'entête YAML réfère à la section de code située au tout début de votre script entourée par 3 tirets (`---`). Cette entête contient des métadonnées facultatives permettant de modifier l'affichage de votre document final (c.-à-d. le « output » de votre script). Par exemple, l'entête YAML permet de spécifier le type de fichier pour le output, le titre de votre document, l'inclusion d'une table des matières, etc..
 
 Voici à quoi pourrait ressembler l'entête YAML d'un script RMarkdown destiné à créer un fichier html (comme celui que vous lisez en ce moment).
 ```YAML
@@ -106,13 +104,15 @@ Le texte écrit dans un fichier RMarkdown — c.-à-d. tout ce qui ne fait pas p
 
 ---
 
-## Sauts de ligne (`\`) et de paragraphe (`  `)
+## Sauts de ligne
 
-Dans votre document final, les sauts de lignes et de paragraphe ne reflèteront pas toujours exactement ceux que vous voyez dans votre script. L'opérateur `\` vous permet d'indiquer explicitement un saut de ligne. Vous pouvez également indiquer un changement de paragraphe en terminant ajoutant deux espaces (`  `) à la fin de celui-ci ou en laissant une ligne vide dans votre script. 
+Dans votre document final, les sauts de lignes et de paragraphe ne reflèteront pas toujours exactement ceux que vous voyez dans votre script. L'opérateur `\` vous permet d'indiquer explicitement un saut de ligne. Vous pouvez également indiquer un changement de paragraphe en ajoutant deux espaces (`  `) à la fin de celui-ci ou en laissant une ligne vide dans votre script. 
 
 *Note: il est difficile de fournir un exemple de cette fonctionnalité.*
 
-## Organiser votre texte avec des titres (`#`)
+---
+
+## Titres (`#`)
 
 Les titres sont créés avec le symbole `#`. Le nombre de `#` détermine le « niveau hiérarchique » de votre titre. Les titres apparaîtrons automatiquement dans votre table des matières (si vous avez activé cette option).
 
@@ -131,7 +131,10 @@ Les titres sont créés avec le symbole `#`. Le nombre de `#` détermine le « n
 
 ---
 
-## Modifier l'affichage du texte
+## Affichage du texte
+
+Le format `markdown` vous permet de modifier l'affichage du texte en entourant les passages que vous souhaitez modifier avec certains symboles. Voici quelques exemples : 
+
 `Texte` = Texte (aucune modification)  
 `*Texte*` = *Texte* (italique)  
 `**Texte**` = **Texte** (gras)  
@@ -169,7 +172,7 @@ Voici une liste ordonnée :
 
 ---
 
-## Insérer une ligne de séparation (`---`)
+## Ligne de séparation
 
 Mettre trois tirets (`---`) tout seul permet d'insérer une ligne horizontale qui accentue la séparation entre différentes sections de votre document. Il peut être pratique de mettre une ligne de séparation directement avant un `#Titre`.
 
@@ -215,8 +218,8 @@ Pour ne pas avoir à ré-écrire ou copier-coller tout ça à chaque fois que vo
 
 ---
 
-## Options globales (ou bloc `setup`)
-Il est souvent utile d'inclure un bloc de code au tout début de votre script (juste après l'entête YAML) pour spécifier certaines commandes R nécessaires au bon fonctionnement de votre document final. Généralement, on ajoute l’argument `include=FALSE` aux paramètres de ce bloc de code afin que celui-ci ne s'affiche pas dans le docuement final. Voici quatre éléments qu'il est pratique d'incorporer à votre bloc de code `setup` :  
+## Options globales
+Il est souvent utile d'inclure un bloc de code au tout début de votre script (juste après l'entête YAML) pour spécifier certaines commandes R nécessaires au bon fonctionnement de votre document final. Généralement, on ajoute l’argument `include=FALSE` aux paramètres de ce bloc de code afin que celui-ci ne s'affiche pas dans le document final. Voici quatre éléments qu'il est pratique d'incorporer à votre bloc de code `setup` :  
 
 - Packages à activer  
 - Option d'affichage des blocs de code (inclu par défaut)  

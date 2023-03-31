@@ -16,17 +16,17 @@ library(readr)
 library(knitr)
 
 # Importer les données
-donnees_brutes <- read_csv("../data/data_visualisation.csv") 
+donnees_brutes <- read_csv("../data/RCC-5323-F-2020-SM_F1.csv") 
 ```
 
 ---
 
 ***Important :*** Ce guide assume que vous savez comment :  
 
-1. rédiger un script RMarkdown (`script_rmarkdown.html`)  
-2. installer et activer des packages (`packages.html`) 
+1. [Rédiger un script RMarkdown](../content/script_rmarkdown.html)  
+2. [Installer et activer des packages](../content/packages.html)  
 
-Les guides associés à chacune de ces étapes sont disponibles sur Studium.
+Vous pouvez cliquer sur les liens ci-dessus pour consulter les guides associées.
 
 ---
 
@@ -81,4 +81,4 @@ Si vous obtenez le output ci-dessus, félicitation! Vous êtes prêt.e à passer
 
 ---
 
-***À noter pour le TP :***  Dans votre travail pratique, vous n'aurez **pas besoin de présenter et expliquer les étapes nécessaires pour importer vos données**. Le code nécessaire pour importer les données sera simplement inclu au bloc de code `setup` au tout début de votre script `.Rmd`. Ce bloc de code ne s'affiche pas dans le document final à cause de l'argument `include=FALSE` dans les paramètres du bloc. Pour plus de détails, veuillez consulter la section 3.1 du document `script_rmarkdown.html` disponible sur Studium.
+***À noter pour le TP :***  Dans votre travail pratique, vous n'aurez **pas besoin de présenter et expliquer les étapes nécessaires pour importer vos données**. Le code nécessaire pour importer les données sera simplement inclu au bloc de code `setup` au tout début de votre script `.Rmd`. Ce bloc de code ne s'affiche pas dans le document final à cause de l'argument `include=FALSE` dans les paramètres du bloc. Pour plus de détails, veuillez consulter la section 3.1 du guide [Rédiger un script RMarkdown](../content/script_rmarkdown.html). 

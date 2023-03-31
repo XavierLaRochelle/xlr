@@ -11,7 +11,7 @@
 
 <meta name="author" content="Xavier La Rochelle" />
 
-<meta name="date" content="2023-03-08" />
+<meta name="date" content="2023-03-31" />
 
 <title>Comparaison de moyennes</title>
 
@@ -1385,23 +1385,17 @@ overflow-y: auto;
 border: 1px solid #ddd;
 border-radius: 4px;
 }
-.tabset-dropdown > .nav-tabs > li.active:before {
-content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+content: "\e259";
 font-family: 'Glyphicons Halflings';
 display: inline-block;
 padding: 10px;
 border-right: 1px solid #ddd;
 }
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-content: "";
-border: none;
-}
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-content: "";
+content: "\e258";
 font-family: 'Glyphicons Halflings';
-display: inline-block;
-padding: 10px;
-border-right: 1px solid #ddd;
+border: none;
 }
 .tabset-dropdown > .nav-tabs > li.active {
 display: block;
@@ -1505,7 +1499,7 @@ border-radius: 0px;
 
 <h1 class="title toc-ignore">Comparaison de moyennes</h1>
 <h4 class="author">Xavier La Rochelle</h4>
-<h4 class="date">2023-03-08</h4>
+<h4 class="date">2023-03-31</h4>
 
 </div>
 
@@ -1514,18 +1508,19 @@ border-radius: 0px;
 <p><strong><em>Important :</em></strong> Ce guide assume que vous savez
 comment :</p>
 <ol style="list-style-type: decimal">
-<li>rédiger un script RMarkdown
-(<code>script_rmarkdown.html</code>)<br />
+<li><a href="../content/script_rmarkdown.html">Rédiger un script
+RMarkdown</a><br />
 </li>
-<li>installer et activer des packages (<code>packages.html</code>)</li>
-<li>importer une base de données
-(<code>importer_les_donnees.html</code>)<br />
+<li><a href="../content/packages.html">Installer et activer des
+packages</a><br />
 </li>
-<li>préparer une base de données
-(<code>preparer_les_donnees.html</code>)</li>
+<li><a href="../content/importer_les_donnees.html">Importer une base de
+données</a></li>
+<li><a href="../content/preparer_les_donnees.html">Préparer des
+données</a></li>
 </ol>
-<p>Les guides associés à chacune de ces étapes sont disponibles sur
-Studium.</p>
+<p>Vous pouvez cliquer sur les liens ci-dessus pour consulter les guides
+associées.</p>
 <hr />
 <div id="importer-et-préparer-les-données" class="section level2" number="0.1">
 <h2><span class="header-section-number">0.1</span> Importer et préparer
@@ -1538,6 +1533,8 @@ nécessaire pour importer et préparer les données :</p>
 <pre class="r"><code># Packages
 library(readr)
 library(tibble)
+library(ggplot2)
+library(Hmisc)
 
 # Importer les données (data_visualisation.csv)
 donnees_brutes &lt;- read_csv(&quot;folder path&quot;)  
@@ -1551,9 +1548,9 @@ df$emotionPositive &lt;- donnees_brutes$PANAS_Pos_Pre</code></pre>
 <p>Pour suivre les exemples dans ce guide, vous devrez donc :<br />
 1. avoir téléchargé le fichier <code>data_visualisation.csv</code> sur
 Studium<br />
-2. noter le <code>&quot;folder path&quot;</code> 3. utiliser la syntaxe suivante
-pour préparer les données dans R :</p>
-<p><em>Note: N’oubliez pas de changer le folder path!</em></p>
+2. noter le <code>&quot;folder path&quot;</code><br />
+3. exécuter la syntaxe ci-dessus (en changeant le
+<code>&quot;folder path&quot;</code>).</p>
 <p>Voici à quoi devrait ressembler votre banque de données après l’étape
 de préparation :</p>
 <pre class="r"><code>df</code></pre>
@@ -1583,96 +1580,86 @@ discrète). À titre d’exemple, nous utiliserons les émotions positives
 <div id="scinder-le-output-par-groupe" class="section level2" number="1.1">
 <h2><span class="header-section-number">1.1</span> Scinder le output par
 groupe</h2>
-<p>Nous avons déjà vue dans le guide
-<code>preparer_les_donnees.html</code> qu’il est possible d’obtenir des
-statistiques descriptives, dont la moyenne, d’une variable à partir de
-la fonction <code>descriptives()</code> du package <code>jmv</code>
-(voir section 2.2.1). Toutefois, la syntaxe présentée précédemment ne
-permettait pas à elle seule d’obtenir, pour une variable continue, les
-moyennes <em>relatives à différents groupes</em>. Pour ce faire, il vous
-devrez ajouter l’argument <code>splitBy =</code> à la fonction
-<code>descriptives()</code>. Comme son nom l’indique, cet argument a
-pour effet de scinder le <em>output</em> généré en fonction des
-catégories de la variable indiquée. Par exemple :</p>
-<pre class="r"><code>descriptives(df, emotionPositive, 
-             splitBy = genre)</code></pre>
-<pre><code>## 
-##  DESCRIPTIVES
-## 
-##  Descriptives                                       
-##  ────────────────────────────────────────────────── 
-##                          genre    emotionPositive   
-##  ────────────────────────────────────────────────── 
-##    N                     Homme                 27   
-##                          Femme                 73   
-##    Missing               Homme                  0   
-##                          Femme                  0   
-##    Mean                  Homme           28.37037   
-##                          Femme           27.09589   
-##    Median                Homme           28.00000   
-##                          Femme           27.00000   
-##    Standard deviation    Homme           8.214191   
-##                          Femme           6.745707   
-##    Minimum               Homme           13.00000   
-##                          Femme           13.00000   
-##    Maximum               Homme           48.00000   
-##                          Femme           41.00000   
-##  ──────────────────────────────────────────────────</code></pre>
+<p>Nous avons déjà vue dans la section 2.2.1 du guide <a href="../content/preparer_les_donnees.html">Préparer des données</a>
+qu’il est possible d’obtenir les statistiques descriptives (dont la
+moyenne) d’une variable continue à partir à partir des fonctions
+mathématiques (<code>mean()</code>, <code>sd()</code>, etc.) du package
+R de base (voir section 2.2.1). Toutefois, la syntaxe présentée
+précédemment ne permettait pas à elle seule d’obtenir les statistiques
+descriptives <em>relatives à différents groupes</em>. Le package
+<code>dplyr</code> offre plusieurs fonctions utiles pour travailler avec
+des données groupées.</p>
+<p>Le package <code>dplyr</code> inclue également l’opérateur
+<code>%&gt;%</code> (<em>pipe operator</em> en anglais), qui permet de
+chaîner plusieurs fonctions ensemble, en utilisant la sortie d’une
+fonction comme entrée de la fonction suivante, ce qui rend le code plus
+facile à lire et à comprendre. Pour ne pas avoir à ré-écrire ou
+copier-coller <code>%&gt;%</code> à chaque fois, vous pouvez simplement
+utiliser les raccourcis suivant :</p>
+<p><strong>Pour Mac</strong> = Cmd (<code>⌘</code>) + Shift
+(<code>⇧</code>) + M<br />
+<strong>Pour Windows</strong> = Ctrl (<code>⌃</code>) + Shift
+(<code>⇧</code>) + M</p>
+<p><em>Note</em> : Si ces raccourcis ne fonctionnent pas pour vous, vous
+pouvez toujours consulter vos raccourcis dans les réglages. Voici
+comment y accéder :<br />
+<code>Preferences</code> &gt; <code>Code</code> &gt;
+<code>Editing</code> &gt; <code>Modify Keyboard Shortcuts...</code></p>
+<p>Voici donc comment obtenir les moyennes de la variable
+<code>emotionPositive</code> pour chaque groupe de la variable
+catégorielle <code>genre</code> (deux variables situées dans la banque
+de données <code>df</code>) :</p>
+<pre class="r"><code>library(dplyr)
+df %&gt;%
+    group_by(genre) %&gt;% 
+    summarise(Moyenne = mean(emotionPositive))</code></pre>
+<pre><code>## # A tibble: 2 × 2
+##   genre Moyenne
+##   &lt;fct&gt;   &lt;dbl&gt;
+## 1 Homme    28.4
+## 2 Femme    27.1</code></pre>
 </div>
 <div id="intervalle-de-confiance" class="section level2" number="1.2">
 <h2><span class="header-section-number">1.2</span> Intervalle de
 confiance</h2>
-<p>Une fois le <em>output</em> scindé, il ne vous reste qu’à utiliser
-l’argument <code>ci = TRUE</code> pour obtenir les limites inférieure et
-supérieure de l’intervalle de confiance de vos groupes. Par exemple
-:</p>
-<pre class="r"><code>descriptives(df, emotionPositive, 
-             splitBy = genre, 
-             ci = TRUE)</code></pre>
-<pre><code>## 
-##  DESCRIPTIVES
-## 
-##  Descriptives                                            
-##  ─────────────────────────────────────────────────────── 
-##                               genre    emotionPositive   
-##  ─────────────────────────────────────────────────────── 
-##    N                          Homme                 27   
-##                               Femme                 73   
-##    Missing                    Homme                  0   
-##                               Femme                  0   
-##    Mean                       Homme           28.37037   
-##                               Femme           27.09589   
-##    95% CI mean lower bound    Homme           25.27202   
-##                               Femme           25.54845   
-##    95% CI mean upper bound    Homme           31.46872   
-##                               Femme           28.64333   
-##    Median                     Homme           28.00000   
-##                               Femme           27.00000   
-##    Standard deviation         Homme           8.214191   
-##                               Femme           6.745707   
-##    Minimum                    Homme           13.00000   
-##                               Femme           13.00000   
-##    Maximum                    Homme           48.00000   
-##                               Femme           41.00000   
-##  ───────────────────────────────────────────────────────</code></pre>
-<div id="intervalle-de-confiance-détails-supplémentaires" class="section level3" number="1.2.1">
-<h3><span class="header-section-number">1.2.1</span> Intervalle de
-confiance : détails supplémentaires</h3>
+<p>La package R de base ne contient pas de fonction spécifique pour
+calculer les limites de l’intervalle de confiance d’une moyenne.
+Évidemment, il est possible de calculer ces limites « à la main » (voir
+la section suivante). Cependant, la syntaxe nécessaire pour y arriver
+est trop complexe pour les besoins de ce cours. Je vous conseil donc
+d’utiliser la fonction <code>smean_cl_normal()</code> du package
+<code>Hmisc</code>. Voici comment ajouter les limites supérieures et
+inférieures de l’intervalle de confiance de la moyenne au tableau de
+l’exemple précédent :</p>
+<pre class="r"><code>library(dplyr)
+library(Hmisc)
+df %&gt;%
+    group_by(genre) %&gt;% 
+    summarise(Moyenne = mean(emotionPositive, na.rm = TRUE),
+              limite_inf = smean.cl.normal(emotionPositive)[&quot;Lower&quot;],
+              limite_sup = smean.cl.normal(emotionPositive)[&quot;Upper&quot;])</code></pre>
+<pre><code>## # A tibble: 2 × 4
+##   genre Moyenne limite_inf limite_sup
+##   &lt;fct&gt;   &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;
+## 1 Homme    28.4       25.1       31.6
+## 2 Femme    27.1       25.5       28.7</code></pre>
+<div id="détails-supplémentaires-intervalle-de-confiance-et-hypothèse-nulle" class="section level3" number="1.2.1">
+<h3><span class="header-section-number">1.2.1</span> Détails
+supplémentaires : Intervalle de confiance et hypothèse nulle</h3>
 <p>Si vous essayez de calculer à la main l’intervalle de confiance à
 partir de la formule présentée dans le manuel (<a href="https://canadacommons.ca/artifacts/1882749/statistiques/2631904/view/">Haccoun
 et Cousineau, 2010</a>, formule 9.5, p. 271), vous arriverez peut-être à
 des résultats différents de ceux obtenus à l’aide de la fonctions
-<code>descriptives()</code>. Cette différence est (probablement) dû au
-fait que la fonction <code>descriptives()</code> calculent l’intervalle
-de confiance à partir de l’erreur-type de chaque groupe pris
-individuellement (plutôt que d’utiliser l’erreur-type de l’échantillon
-complet). Dans un contexte d’inférence statistique (ex.: test-t), il est
-plus cohérent d’estimer l’erreur-type de la moyenne à partir de
-l’échantillon complet puisqu’on cherche à représenter l’hypothèse nulle.
-Cependant, obtenir un intervalle calculer de cette manière nécessite de
-coder manuellement la formule dans R, ce qui résulte en une syntaxe
-beaucoup trop complexe pour ce cours. Pour ceux que ça intéresse, la
-voici :</p>
+<code>smean_cl_normal()</code>. Cette différence s’explique par le fait
+que cette fonction calcule l’intervalle de confiance à partir de
+l’erreur-type de chaque groupe pris individuellement (plutôt que
+d’utiliser l’erreur-type de l’échantillon complet). Dans un contexte
+d’inférence statistique (ex.: test-t), il est plus cohérent d’estimer
+l’erreur-type de la moyenne à partir de l’échantillon complet puisqu’on
+cherche à représenter l’hypothèse nulle. Cependant, obtenir un
+intervalle calculé de cette manière nécessite de coder manuellement la
+formule dans R, ce qui résulte en une syntaxe beaucoup trop complexe
+pour ce cours. Pour ceux que ça intéresse, la voici :</p>
 <pre class="r"><code>library(dplyr)
 library(tidyr)
 
@@ -1687,9 +1674,10 @@ N &lt;- df %&gt;%
         length()
 s_M &lt;- s / sqrt(N)
 
-# Calculer le score Z limite
+# Calculer le score t limite
 conf.int &lt;- 0.95
-Z &lt;- qnorm((1 + conf.int)/2)
+degrees_of_freedom &lt;- N - 2 # Deux groupes
+t &lt;- qt((1 + conf.int)/2, df = degrees_of_freedom)
 
 # Calculer les limites de l&#39;IC et présenter dans un tableau
 options(pillar.sigfig = 4)
@@ -1697,16 +1685,16 @@ df %&gt;%
   drop_na(emotionPositive) %&gt;% 
   group_by(genre) %&gt;% 
   summarise(Moyenne = mean(emotionPositive),
-            IC_inf = mean(emotionPositive) - Z * s_M,
-            IC_sup = mean(emotionPositive) + Z * s_M)</code></pre>
+            limite_inf = mean(emotionPositive) - t * s_M,
+            limite_sup = mean(emotionPositive) + t * s_M)</code></pre>
 <pre><code>## # A tibble: 2 × 4
-##   genre Moyenne IC_inf IC_sup
-##   &lt;fct&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
-## 1 Homme   28.37  26.97  29.77
-## 2 Femme   27.10  25.69  28.50</code></pre>
+##   genre Moyenne limite_inf limite_sup
+##   &lt;fct&gt;   &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;
+## 1 Homme   28.37      26.95      29.79
+## 2 Femme   27.10      25.68      28.51</code></pre>
 <p>Dans le cadre de votre TP, vous pourrez présenter l’intervalle de
 confiance obtenus à partir de la fonction
-<code>descriptives()</code>.</p>
+<code>smean_cl_normal()</code>.</p>
 </div>
 </div>
 </div>

@@ -11,7 +11,7 @@
 
 <meta name="author" content="Xavier La Rochelle" />
 
-<meta name="date" content="2023-03-13" />
+<meta name="date" content="2023-03-31" />
 
 <title>Les packages</title>
 
@@ -1385,23 +1385,17 @@ overflow-y: auto;
 border: 1px solid #ddd;
 border-radius: 4px;
 }
-.tabset-dropdown > .nav-tabs > li.active:before {
-content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+content: "\e259";
 font-family: 'Glyphicons Halflings';
 display: inline-block;
 padding: 10px;
 border-right: 1px solid #ddd;
 }
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-content: "";
-border: none;
-}
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-content: "";
+content: "\e258";
 font-family: 'Glyphicons Halflings';
-display: inline-block;
-padding: 10px;
-border-right: 1px solid #ddd;
+border: none;
 }
 .tabset-dropdown > .nav-tabs > li.active {
 display: block;
@@ -1505,7 +1499,7 @@ border-radius: 0px;
 
 <h1 class="title toc-ignore">Les packages</h1>
 <h4 class="author">Xavier La Rochelle</h4>
-<h4 class="date">2023-03-13</h4>
+<h4 class="date">2023-03-31</h4>
 
 </div>
 
@@ -1514,8 +1508,9 @@ border-radius: 0px;
 <p><strong><em>Important :</em></strong> Pour faciliter votre
 compréhension de ce guide, vous devez préalablement vous êtres
 familiarisé.e avec les bases de la rédaction d’un script RMarkdown. Si
-ce n’est pas déjà fait, veuillez lire attentivement le document
-<code>script_rmarkdown.html</code> sur Studium.</p>
+ce n’est pas déjà fait, veuillez lire attentivement le guide suivant :
+<a href="../content/script_rmarkdown.html">Rédiger un script
+RMarkdown</a>.</p>
 <hr />
 <p>Les packages sont des <strong>modules</strong> (ou extensions,
 librairies, bibliothèques) qui contiennent un ensemble de

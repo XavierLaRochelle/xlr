@@ -11,7 +11,7 @@
 
 <meta name="author" content="Xavier La Rochelle" />
 
-<meta name="date" content="2023-03-28" />
+<meta name="date" content="2023-03-31" />
 
 <title>Corrélation</title>
 
@@ -1499,7 +1499,7 @@ border-radius: 0px;
 
 <h1 class="title toc-ignore">Corrélation</h1>
 <h4 class="author">Xavier La Rochelle</h4>
-<h4 class="date">2023-03-28</h4>
+<h4 class="date">2023-03-31</h4>
 
 </div>
 
@@ -1508,18 +1508,19 @@ border-radius: 0px;
 <p><strong><em>Important :</em></strong> Ce guide assume que vous savez
 comment :</p>
 <ol style="list-style-type: decimal">
-<li>rédiger un script RMarkdown
-(<code>script_rmarkdown.html</code>)<br />
+<li><a href="../content/script_rmarkdown.html">Rédiger un script
+RMarkdown</a><br />
 </li>
-<li>installer et activer des packages (<code>packages.html</code>)</li>
-<li>importer une base de données
-(<code>importer_les_donnees.html</code>)<br />
+<li><a href="../content/packages.html">Installer et activer des
+packages</a><br />
 </li>
-<li>préparer une base de données
-(<code>preparer_les_donnees.html</code>)</li>
+<li><a href="../content/importer_les_donnees.html">Importer une base de
+données</a></li>
+<li><a href="../content/preparer_les_donnees.html">Préparer des
+données</a></li>
 </ol>
-<p>Les guides associés à chacune de ces étapes sont disponibles sur
-Studium.</p>
+<p>Vous pouvez cliquer sur les liens ci-dessus pour consulter les guides
+associées.</p>
 <hr />
 <div id="importer-et-préparer-les-données" class="section level2" number="0.1">
 <h2><span class="header-section-number">0.1</span> Importer et préparer
@@ -1533,20 +1534,21 @@ les données :</p>
 <pre class="r"><code># Packages
 library(readr)
 library(tibble)
+library(ggplot2)
 
 # Importer les données (data_visualisation.csv)
 donnees_brutes &lt;- read_csv(&quot;folder path&quot;)  
 
 # Préparer les données 
-df &lt;- as_tibble(data.frame(id = 1:nrow(donnees_brutes)))
+df &lt;- tibble(id = 1:nrow(donnees_brutes))
 df$symptomesDepressifs &lt;- donnees_brutes$CESD_PreTotal
 df$emotionPositive &lt;- donnees_brutes$PANAS_Pos_Pre</code></pre>
 <p>Pour suivre les exemples dans ce guide, vous devrez donc :<br />
 1. avoir téléchargé le fichier <code>data_visualisation.csv</code> sur
 Studium<br />
 2. noter le <code>&quot;folder path&quot;</code><br />
-3. utiliser la syntaxe ci-dessus pour préparer les données dans R</p>
-<p><em>Note: N’oubliez pas de changer le folder path!</em></p>
+3. exécuter la syntaxe ci-dessus (en changeant le
+<code>&quot;folder path&quot;</code>).</p>
 <p>Voici à quoi devrait ressembler votre banque de données après l’étape
 de préparation :</p>
 <pre class="r"><code>df</code></pre>
@@ -1695,10 +1697,10 @@ comparant les niveaux faibles et élevés de symtpômes dépressifs.</p>
 ## sample estimates:
 ##        rho 
 ## -0.1858702</code></pre>
-<p><em>Note</em> : l’avertissement « Cannot compute exact p-value with
-ties » est normal. Il indique simplement qu’une méthode d’approximation
-a été utilisée pour obtenir la valeur de p puisque certaines
-observations obtiennent le même rang.</p>
+<p><em>Note</em> : l’avertissement « <em>Cannot compute exact p-value
+with ties</em> » est normal. Il indique simplement qu’une méthode
+d’approximation a été utilisée pour obtenir la valeur de p puisque
+certaines observations obtiennent le même rang.</p>
 </div>
 </div>
 

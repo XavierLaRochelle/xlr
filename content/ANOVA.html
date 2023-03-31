@@ -11,7 +11,7 @@
 
 <meta name="author" content="Xavier La Rochelle" />
 
-<meta name="date" content="2023-03-28" />
+<meta name="date" content="2023-03-31" />
 
 <title>ANOVA</title>
 
@@ -1499,7 +1499,7 @@ border-radius: 0px;
 
 <h1 class="title toc-ignore">ANOVA</h1>
 <h4 class="author">Xavier La Rochelle</h4>
-<h4 class="date">2023-03-28</h4>
+<h4 class="date">2023-03-31</h4>
 
 </div>
 
@@ -1509,6 +1509,24 @@ pre code {
 white-space: pre;
 }
 </style>
+<p><strong><em>Important :</em></strong> Ce guide assume que vous savez
+comment :</p>
+<ol style="list-style-type: decimal">
+<li><a href="../content/script_rmarkdown.html">Rédiger un script
+RMarkdown</a><br />
+</li>
+<li><a href="../content/packages.html">Installer et activer des
+packages</a><br />
+</li>
+<li><a href="../content/importer_les_donnees.html">Importer une base de
+données</a></li>
+<li><a href="../content/preparer_les_donnees.html">Préparer des
+données</a></li>
+<li><a href="../content/test-t.html">Vérifier la normalité</a> (Section
+1.1)</li>
+</ol>
+<p>Vous pouvez cliquer sur les liens ci-dessus pour consulter les guides
+associées.</p>
 <div id="banque-de-données" class="section level2" number="0.1">
 <h2><span class="header-section-number">0.1</span> Banque de
 données</h2>
@@ -1525,7 +1543,7 @@ library(emmeans)
 
 # Importer les données
 data(&quot;iris&quot;)
-df &lt;- as_tibble(iris)</code></pre>
+df &lt;- tibble(iris)</code></pre>
 <p>Voici à quoi devrait ressembler votre banque de données après l’étape
 de préparation :</p>
 <pre class="r"><code>df</code></pre>
@@ -1595,7 +1613,6 @@ df_virginica &lt;- subset(df, df$Species == &quot;virginica&quot;)</code></pre>
 <hr />
 <div id="normalité" class="section level3" number="1.2.1">
 <h3><span class="header-section-number">1.2.1</span> Normalité</h3>
-<hr />
 <div id="shapiro-wilk" class="section level4" number="1.2.1.1">
 <h4><span class="header-section-number">1.2.1.1</span> Shapiro-Wilk</h4>
 <pre class="r"><code>shapiro.test(df_setosa$Petal.Length)</code></pre>
@@ -1636,7 +1653,7 @@ qqline(df_versicolor$Petal.Length)</code></pre>
 <h3><span class="header-section-number">1.2.2</span>
 Homoscédasticité</h3>
 <pre class="r"><code>library(car)
-leveneTest(Petal.Length ~ Species, data = df)</code></pre>
+leveneTest(df$Petal.Length ~ df$Species)</code></pre>
 <pre><code>## Levene&#39;s Test for Homogeneity of Variance (center = median)
 ##        Df F value    Pr(&gt;F)    
 ## group   2   19.48 3.129e-08 ***
@@ -1729,13 +1746,13 @@ Mann-Whitney (voir section 2 du guide <code>test-t.html</code>).</p>
 </div>
 <div id="faire-le-test-1" class="section level2" number="2.2">
 <h2><span class="header-section-number">2.2</span> Faire le test</h2>
-<pre class="r"><code>kruskal.test(Petal.Length ~ Species, data = df)</code></pre>
+<pre class="r"><code>kruskal.test(df$Petal.Length ~ df$Species)</code></pre>
 <pre><code>## 
 ##  Kruskal-Wallis rank sum test
 ## 
-## data:  Petal.Length by Species
+## data:  df$Petal.Length by df$Species
 ## Kruskal-Wallis chi-squared = 130.41, df = 2, p-value &lt; 2.2e-16</code></pre>
-<p>On peut encore une fois conclure que la longueur moyennes des pétales
+<p>On peut encore une fois conclure que la longueur moyenne des pétales
 diffère significativement selon l’espèce de fleur (<span class="math inline">\(\chi^2(2) = 130,4; p &lt; ,05\)</span>).</p>
 <hr />
 </div>

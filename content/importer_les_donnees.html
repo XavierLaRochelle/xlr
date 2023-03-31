@@ -11,7 +11,7 @@
 
 <meta name="author" content="Xavier La Rochelle" />
 
-<meta name="date" content="2023-03-30" />
+<meta name="date" content="2023-03-31" />
 
 <title>Importer les données</title>
 
@@ -1499,7 +1499,7 @@ border-radius: 0px;
 
 <h1 class="title toc-ignore">Importer les données</h1>
 <h4 class="author">Xavier La Rochelle</h4>
-<h4 class="date">2023-03-30</h4>
+<h4 class="date">2023-03-31</h4>
 
 </div>
 
@@ -1508,13 +1508,14 @@ border-radius: 0px;
 <p><strong><em>Important :</em></strong> Ce guide assume que vous savez
 comment :</p>
 <ol style="list-style-type: decimal">
-<li>rédiger un script RMarkdown
-(<code>script_rmarkdown.html</code>)<br />
+<li><a href="../content/script_rmarkdown.html">Rédiger un script
+RMarkdown</a><br />
 </li>
-<li>installer et activer des packages (<code>packages.html</code>)</li>
+<li><a href="../content/packages.html">Installer et activer des
+packages</a></li>
 </ol>
-<p>Les guides associés à chacune de ces étapes sont disponibles sur
-Studium.</p>
+<p>Vous pouvez cliquer sur les liens ci-dessus pour consulter les guides
+associées.</p>
 <hr />
 <p>Pour <em>analyser</em> des données, il faut tout d’abord
 <em>avoir</em> des données à analyser! Dans ce guide, nous allons
@@ -1595,25 +1596,20 @@ syntaxe (n’oubliez pas de remplacer le <code>folder path</code>!) :</p>
 <p>On peut maintenant afficher l’objet qu’on vient de créer en appellant
 son nom :</p>
 <pre class="r"><code>donnees_brutes</code></pre>
-<pre><code>## # A tibble: 100 × 19
-##    Interven…¹   Age Revenu Genre Educa…² Flour…³ Flour…⁴ CESD_…⁵ CESD_…⁶ AHS_P…⁷
-##         &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
-##  1          1    22      2     2       2    35        40       9    4         21
-##  2          2    20      2     2       2    37        35       7    6         18
-##  3          1    21      3     2       2    41        46       1    2         22
-##  4          2    21      2     2       2    39        37      11    7         20
-##  5          1    24      2     2       2    32        32      23   26         22
-##  6          2    24      2     2       2    41        40       5    9         23
-##  7          1    23      2     2       2    39.9      31      10    9         19
-##  8          1    19      5     2       2    38        46       8    9         24
-##  9          1    22      3     1       2    44        45       4    4         24
-## 10          2    19      5     2       2    48        48       2    7.09      21
-## # … with 90 more rows, 9 more variables: AHS_PostTotal &lt;dbl&gt;,
-## #   BMPN_Sat_Aut_Pre &lt;dbl&gt;, BMPN_Sat_Aut_Post &lt;dbl&gt;, BMPN_Sat_Rel_Pre &lt;dbl&gt;,
-## #   BMPN_Sat_Rel_Post &lt;dbl&gt;, BMPN_Sat_Com_Pre &lt;dbl&gt;, BMPN_Sat_Com_Post &lt;dbl&gt;,
-## #   PANAS_Pos_Pre &lt;dbl&gt;, PANAS_Pos_Post &lt;dbl&gt;, and abbreviated variable names
-## #   ¹​Intervention, ²​Education, ³​Flourish_PreTotal, ⁴​Flourish_PostTotal,
-## #   ⁵​CESD_PreTotal, ⁶​CESD_PostTotal, ⁷​AHS_PreTotal</code></pre>
+<pre><code>## # A tibble: 45,989 × 6
+##    MH_05 DEM_10 ANXDVGAD PPROV PAGEGR ...6 
+##    &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;lgl&gt;
+##  1     3      2       11    35      6 NA   
+##  2     3      2        5    13      7 NA   
+##  3     1      1        0    12      4 NA   
+##  4     2      1       10    48      4 NA   
+##  5     3      2       11    59      7 NA   
+##  6     2      1        0    35      7 NA   
+##  7     2      1        0    59     10 NA   
+##  8     1      1        0    59     10 NA   
+##  9     4      2       12    35      8 NA   
+## 10     4      2       16    13      4 NA   
+## # … with 45,979 more rows</code></pre>
 <p>Si vous obtenez le output ci-dessus, félicitation! Vous êtes prêt.e à
 passer au guide suivant (<code>preparation_de_donnees.html</code>).</p>
 <hr />
@@ -1624,8 +1620,8 @@ nécessaire pour importer les données sera simplement inclu au bloc de
 code <code>setup</code> au tout début de votre script <code>.Rmd</code>.
 Ce bloc de code ne s’affiche pas dans le document final à cause de
 l’argument <code>include=FALSE</code> dans les paramètres du bloc. Pour
-plus de détails, veuillez consulter la section 3.1 du document
-<code>script_rmarkdown.html</code> disponible sur Studium.</p>
+plus de détails, veuillez consulter la section 3.1 du guide <a href="../content/script_rmarkdown.html">Rédiger un script
+RMarkdown</a>.</p>
 </div>
 
 

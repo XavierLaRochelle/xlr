@@ -16,30 +16,33 @@ output:
 # Packages
 library(knitr)
 library(readr)
+library(tibble)
+library(jmv)
+library(sjmisc)
 
 # Importer les données
-donnees_brutes <- read_csv("~/OneDrive/Documents/Udem/Hiver 2023/PSY1004/Ateliers R/preparation_de_donnees_exemple/RCC-5323-F-2020-SM_F1.csv")  
+donnees_brutes <- read_csv("../data/RCC-5323-F-2020-SM_F1.csv")  
 ```
 
 ***Important :*** Ce guide assume que vous savez comment :  
 
-1. rédiger un script RMarkdown (`script_rmarkdown.html`)  
-2. installer et activer des packages (`packages.html`) 
-3. importer une base de données (`importer_les_donnees.html`)
+1. [Rédiger un script RMarkdown](../content/script_rmarkdown.html)  
+2. [Installer et activer des packages](../content/packages.html)  
+3. [Importer une base de données](../content/importer_les_donnees.html)
 
-Les guides associés à chacune de ces étapes sont disponibles sur Studium.
+Vous pouvez cliquer sur les liens ci-dessus pour consulter les guides associées.
 
 --- 
 
 ## Péparation
 
-Dans le dernier guide (`importer_les_donnees.html`), nous avons appris comment importer une banque de données dans R. À des fins de démonstrations, nous utiliserons la même banque de données dans ce guide. 
+Dans le dernier guide ([Importer une base de données](../content/importer_les_donnees.html)), nous avons appris comment importer une banque de données dans R. À des fins de démonstrations, nous utiliserons la même banque de données dans ce guide. 
 
 Pour suivre cette démonstration, vous devez préalablement :  
 
 1. télécharger le fichier de données (`RCC-5323-F-2020-SM_F1.csv`) ainsi que la documentation Odesi concernant son contenu (`RCC-5323-F-2020-SM.pdf`). Ces documents sont disponibles sur Studium. Voici comment y accéder :  
 
-`Ateliers R` > `Importer et préparer les données (exemple)`  
+`Ateliers R` > `Données pour les exemples`  
 
 2. importer le fichier de données dans R (aka. assigner `RCC-5323-F-2020-SM_F1.csv` à l'objet `donnees_brutes`). Voici la syntaxe nécessaire :  
 
@@ -55,7 +58,7 @@ donnees_brutes
 
 Le *output* ressemble bel et bien à un banque de données, ce qui est bon signe. On peut constater qu'elle comprend 45'989 observations (les rangés) et 6 variables (les colonnes : `MH_05`, `DEM_10`, `ANXDVGAD`, `PPROV`, `PAGEGR` et `...6`). 
 
-*Note: Si vous regarder ce tableau attentivement, vous constaterez que la 6ième colonne (`...6`) n'est pas vraiment une variable. Odesi semble toujours ajouter une colonne supplémentaire rempli de données manquantes*(`NA`)*. Vous pouvez l'ignorer.*
+*Note*: La 6ième colonne (`...6`) n'est pas vraiment une variable. Odesi semble toujours ajouter une colonne supplémentaire rempli de données manquantes (`NA`). Vous pouvez l'ignorer.
 
 ---
 
@@ -65,16 +68,18 @@ Lorsqu'on travail avec des variables dans R, il est bon de savoir distinguer leu
 ### Format de variable
 Le format indique de quelle manière les variables sont codées dans R. Lorsque vous afficher un `tibble` (comme on l'a fait dans la section précédente), les caractères directement en dessous du nom des variables (entourés de `<>`) vous informent sur le **format** de vos variables. Il existe plusieurs formats de variables dans R (ex.: logique `<lgl>`, entier `<int>`, etc.). Pour les besoins du cours, on va seulement utiliser deux formats, soit numérique (`<dbl>` pour `double` ou `numeric`) et catégoriel (`<fctr>` pour `factor`).
 
-Sachez qu'il est possible de coder des variables de classe ordinale `<ord>` dans R. Cela étant dit, ce type de variable est rarement utilisé puisqu'il fait l'objet d'une certaine ambiguïté en statistique (souvent traité comme continue selon le nombre de catégories). Pour conclure sur les formats, il n'existe pas de format particulier pour désigner les variables à intervalle dans R.
+Sachez qu'il est possible de coder des variables de classe ordinale `<ord>` dans R. Cela étant dit, ce type de variable est rarement utilisé puisqu'il fait l'objet d'une certaine ambiguïté en statistique (souvent traité comme continue dépendemment du nombre de catégories). Soulignons également qu'il n'existe pas de format particulier pour désigner les variables à intervalle dans R.
 
 ### Type de variable
-Lorsque vous travaillez dans R (ou lorsque vous faites des analyses quantitatives en général), c'est *votre* responsabilité de connaître le type des variables que vous utilisez. Le type d'une variable désigne son échelle de mesure. Dans le contexte de votre TP, vous aurez accès à la documentation Odesi qui spécifie pour vous le type de vos variables. Par exemple :  
+Lorsque vous travaillez dans R (ou lorsque vous faites des analyses quantitatives en général), c'est **votre** responsabilité de connaître (ou déterminer) le type des variables que vous utilisez. Le type d'une variable désigne son échelle de mesure. Le type « théoriquement approprié » d'une variable est parfois difficile à déterminer et plusieurs variables en psychologie se situent à la limite entre le continue et le discret/catégoriel (ex.: échelle de Likert à 7 ancrages). 
 
-![](images/types.png)
+Par ailleurs, les deux formats que nous utiliserons dans R (`<fctr>` et `<dbl>`) ne permettent pas de représenter parfaitement les quatre échelles de mesure décrites dans votre manuel ([Haccoun et Cousineau, 2010](https://canadacommons.ca/artifacts/1882749/statistiques/2631904/view/), p. 20 à 26). Pour des raisons pratiques, nous ferons simplement la distinction entre les variables de type 1 (**discrète** = format catégoriel `<fctr>`) et les variables de type 2 (**continue** = format numérique `<dbl>`).
 
-Les deux formats que nous utiliserons dans R (`<fctr>` et `<dbl>`) ne permettent pas de représenter parfaitement les quatre échelles de mesure décrites dans votre manuel ([Haccoun et Cousineau, 2010](https://canadacommons.ca/artifacts/1882749/statistiques/2631904/view/), p. 20 à 26). Pour des raisons pratiques, nous ferons simplement la distinction entre les variables de type 1 (**discrète** = format catégoriel `<fctr>`) et les variables de type 2 (**continue** = format numérique `<dbl>`).
+Dans le contexte de votre TP, vous aurez accès à la documentation Odesi, qui vous indique comment les créateurs de la banque de données que vous utilisez ont définies les variables qui s'y trouvent. Par exemple :  
 
-La documentation Odesi ne fait pas distinction entre sous-types de variables discrètes (*nominale* et *ordinale*) et continues (*à intervalles* et *de rapport*). Dans votre TP, **vous devrez quand même mentionner les échelles de mesure précises** dans la description de vos variables. 
+![](../images/types.png)
+
+La documentation représente un bon guide pour déterminer le type de vos variable. Cela étant dit, je vous déconseil de vous fier aveuglément à la documentation puisque ces étiquettes sont parfois tinter de subjectivité. D'une part, il est bon de développer un esprit critique par rapport aux propriétés des variables qu'on utilise en recherche. D'autre part, la documentation Odesi ne fait pas de distinction entre les sous-types de variables discrètes (*nominale* et *ordinale*) et continues (*à intervalles* et *de rapport*). Dans votre TP, **vous devrez quand même mentionner les échelles de mesure précises** dans la description de vos variables. 
 
 ---
 
@@ -94,38 +99,37 @@ Ces problèmes au niveau du format de vos données rendent l'interprétation de 
 La première étape consiste à créer la structure de base de notre banque de données propre. Pour ce faire, nous aurons besoin d'activer le package `tibble`. Voici la syntaxe complète :  
 ```{r}
 library(tibble)
-df <- as_tibble(data.frame(id = 1:nrow(donnees_brutes)))
+df <- tibble(id = 1:nrow(donnees_brutes))
 ```
 
-Je vous rassure tout de suite : *vous n'avez pas besoin de comprendre tous les petits détails de la deuxième ligne*. Il est suffisant de comprendre est que cette syntaxe **assigne** (avec l'opérateur `<-`) tout ce qu'il y a à droite de l'opérateur (`as_tibble(data.frame(id = 1:nrow(donnees_brutes)))`) à un nouvel objet qu'on choisi d'appeller `df`.  
+Je vous rassure tout de suite : *vous n'avez pas besoin de comprendre tous les petits détails de la deuxième ligne*. Il est suffisant de comprendre est que cette syntaxe **assigne** (avec l'opérateur `<-`) tout ce qu'il y a à droite de l'opérateur (`tibble(id = 1:nrow(donnees_brutes))`) à un nouvel objet qu'on choisi d'appeller `df`.  
 
-Pour ceux veulent comprendre la partie à droite de l'opérateur `<-`, la section suivante fournie une brève explication. Si ça ne vous intéresse pas, vous pouvez aller directement à la section 2.
+Pour ceux qui souhaitent comprendre la partie à droite de l'opérateur `<-`, la section suivante fournie une brève explication. Si ça ne vous intéresse pas, vous pouvez aller directement à la section 2.
 
 ## Explications supplémentaires
 
-`as_tibble(data.frame(id = 1:nrow(donnees_brutes)))`
+`tibble(id = 1:nrow(donnees_brutes))`
 
-Le code ci-dessus combine trois fonctions (`nrow()`, `data.frame()` et `as_tibble()`) et deux opérateurs R (`=` et `:`) pour de répondre à deux sous-objectifs précis :
+Le code ci-dessus combine deux fonctions (`nrow()` et `as_tibble()`) et deux opérateurs R (`=` et `:`) pour de répondre à deux sous-objectifs précis :
 
-1. **Créer une banque de données contenant une variable d'identification**  
+1. **Créer un** `tibble`
 
-Pour ce faire, on combine deux fonctions du package R de base (`data.frame()` et `nrow()`). Plus spécifiquement, la syntaxe `data.frame(id = 1:nrow(donnees_brutes))` génère un `data frame` contenant la variable `id`. Cette variable correspond à une suite de nombres entiers allant de 1 à 45'989. 
+La fonction `tibble()` retourne un objet de type `tibble`, ce qui correspond à un type de `data frame` (ou « banque de données ») ayant certaines propriétés particulièrement utiles lorsqu'on travaille en `rmarkdown`. Par exemple, lorsqu'on affiche une banque de données, un objet de type `tibble` spécifie le format des variables et limite le output à 10 observations, ce qui n'est pas le cas pour un simple `data frame` :
 
-La fonction `nrow(donnees_brutes)` assure que votre variable d'identification `id` aura toujours le même nombre d'observations que votre banque de données brutes. 
+```{r}
+data.frame(id = 1:24)
+tibble(id = 1:24)
+```
+
+2. **Créer une variable d'identification**  
+
+La syntaxe `id = 1:nrow(donnees_brutes)` génère la variable `id`, qui correspond à une suite de nombres entiers allant de 1 à 45'989. Plus spécifiquement, la fonction `nrow(donnees_brutes)` assure que votre variable d'identification `id` aura toujours le même nombre d'observations que votre banque de données brutes. 
+
 ```{r}
 nrow(donnees_brutes)
 ```
 
-
-Donc en gros, cette syntaxe me permet de créer rapidement une banque de données où toutes mes observations obtiennent un numéro d'identification unique. Avoir une variable qui représente vos observations (`id`) est parfois nécessaire pour faire certaines analyses. De plus, les étapes suivantes nécessitent que votre nouvelle banque de données `df` soit exactement de la même longueur que votre banque de données brutes `donnees_brutes`.
-
-2. **Appliquer le format** `tibble` **à cette nouvelle banque de données**  
-
-Cette partie est beaucoup plus intuitive que la précédente, mais la raison de son ajout est davantage esthétique. La syntaxe `as_tibble(data.frame())` permet d'attribuer le format `tibble` au `data frame` qu'on est en train de créer. Un `tibble` est donc un type de `data frame` spécifique à R et qui nous facilite particulièrement la vie lorsqu'on travaille avec RMarkdown. Par exemple, pour afficher une banque de données, un objet de type `tibble` spécifie le format des variables et limite le output à 10 observations, ce qui n'est pas le cas pour un simple `data frame` :
-```{r}
-data.frame(id = 1:24)
-as_tibble(data.frame(id = 1:24))
-```
+Avoir une variable qui représente chaque observation individuellement (`id`) est parfois nécessaire pour utiliser des fonctions. De plus, les étapes suivantes nécessitent que votre nouvelle banque de données `df` soit exactement de la même longueur que votre banque de données brutes `donnees_brutes`.
 
 # Manipulation de variables
 Les deux prochaines sections (2.1 et 2.2) visent à vous familiariser avec la manipulation de variables dans R. Les deux sous-sections suivantes présenteront la syntaxe nécessaire pour inclure 
@@ -144,7 +148,7 @@ x <- 1:500 # traduction : la variable x est égale à une suite d'entiers allant
 x # Afficher
 ```
 
-Il est donc préférable d'utiliser des fonctions spécialisées pour regarder nos variables. Comme vous pouvez l'imaginer, il existe une multitude de fonctions de ce type. Plusieurs fonctions mathématiques rudimentaires sont inclues au package R de base. Pour les besoins de ce cours, je vous en montre 2 : `frq()` du package `sjmisc` et `descriptives()` du package `jmv`. 
+Il est donc préférable d'utiliser des fonctions spécialisées pour regarder nos variables. Comme vous pouvez l'imaginer, il existe une multitude de fonctions de ce type. Plusieurs fonctions mathématiques rudimentaires sont inclues au package R de base. Je mentionne également deux packages offrant des fonctions utiles à la description de variables : `sjmisc` et `jmv`. 
 
 ### Statistiques descriptives
 Le package R de base fourni plusieurs fonctions pour calculer les statistiques descriptives d'une variable. Par exemple, la fonction `mean()` permet d'obtenir la moyenne et la fonction `median()` la médiane. Voici quelques fonctions pratiques à retenir : 
@@ -162,7 +166,7 @@ mean(donnees_brutes$ANXDVGAD)
 sd(donnees_brutes$ANXDVGAD)
 ```
 
-![](images/desc.png)  
+![](../images/desc.png)  
 
 Cette différence s'explique par le fait que les données manquantes (observations avec un score de `99`) n'ont pas encore été recodées correctement. Nous addresserons ce problème dans la section 3.1.1 de ce guide.
 
@@ -215,7 +219,7 @@ frq(donnees_brutes$PPROV)
 Le *output* me montre du nombre d'observations (colonne `N`) pour chacune des valeurs (colonne `Value`) de la variable `PPROV`. Il fournit également la moyenne (`mean=36.63`) et l'écart-type (`sd=13.38`), deux statistiques qui ne font pas beaucoup de sens dans ce cas-ci puisque la variable qu'on observe est catégorielle (`PPROV` = `Province de résidence`).
 
 Je vous conseil de **toujours utiliser la fonction `frq()` lorsque vous préparer vos données**. Ce faisant, il est facile de vérifier la *validité*/*plausibilité* des différentes valeurs de vos variables — c.-à-d. qu'aucun score erroné ne s'est glissé dans la banque de données que vous utilisez. Par exemple, on peut effectuer cette vérification en comparant le *output* ci-dessus à la documentation Odesi concernant la variable `PPROV` :  
-![](images/frq.png)   
+![](../images/frq.png)   
 
 Je peux ainsi confirmer que toutes les valeurs du tableau de fréquence généré précédemment semblent correctes. Je constate au passage que cette variable ne contient pas de données manquantes (`96`, `97`, `98` ou `99`).
 
@@ -320,7 +324,7 @@ donnees_brutes$variable_F <- factor(donnees_brutes$variable,
 ```
 
 
-On peut afficher le résultats :  
+On peut afficher le résultat :  
 ```{r}
 donnees_brutes
 ```
@@ -341,4 +345,4 @@ Pour vous exercer, vous pouvez compléter la banque de données propre en inclua
 ---
 
 ***À noter pour le TP :***  
-Dans votre travail pratique, vous n'aurez **pas besoin de présenter et expliquer les étapes nécessaires pour préparer vos données**. Le code nécessaire pour importer les données sera simplement inclu au bloc de code `setup` au tout début de votre script `.Rmd`. Ce bloc de code ne s'affiche pas dans le document final à cause de l'argument `include=FALSE` dans les paramètres du bloc. Pour plus de détails, veuillez consulter la section 3.1 du document `script_rmarkdown.html` disponible sur Studium.
+Dans votre travail pratique, vous n'aurez **pas besoin de présenter et expliquer les étapes nécessaires pour préparer vos données**. Le code nécessaire pour importer les données sera simplement inclu au bloc de code `setup` au tout début de votre script `.Rmd`. Ce bloc de code ne s'affiche pas dans le document final à cause de l'argument `include=FALSE` dans les paramètres du bloc. Pour plus de détails, veuillez consulter la section 3.1 du guide [Rédiger un script RMarkdown](../content/script_rmarkdown.html). 

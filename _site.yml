@@ -1,8 +1,8 @@
 navbar: 
-  title: Xavier La Rochelle
+  title: À propos
   left:
   - text: Projets
     href: content.html
-output:
+output: 
   html_document:
-    theme: flatly
+    theme: readable

@@ -1,11 +1,13 @@
 ---
 title: "Projets"
-output:   
-  html_document: 
-    df_print: paged
+output: html_document
 ---
 
-# PSY1004H - Session d'hiver 2023
+---
+
+### PSY1004H - Session d'hiver 2023
+
+**Guide :**
 
 1. [Rédiger un script RMarkdown](content/script_rmarkdown.html)  
 2. [Installer et activer des packages](content/packages.html)  
@@ -16,5 +18,13 @@ output:
 7. [Corrélation de Pearson et de Spearman](content/Correlation.html)  
 8. [Test-t et test U Mann-Whitney](content/test-t.html)  
 9. [ANOVA et test de Kruskal-Wallis](content/ANOVA.html)  
-10. [Chi-carré et méthode exact de Fisher](Chi-carré.html)  
+10. [Chi-carré et méthode exact de Fisher](content/Chi-carré.html)  
 
+**Enregistrements des séances :**
+
+- [Visualiser les données - 8/02/2023](https://youtu.be/qsP62S8dEXo) 
+- [Comparaison de moyennes - 15/02/2023](https://youtu.be/vSftGWhzs80)
+- [Corrélation - 8/03/2023](https://youtu.be/L8SoqzQ76h8)
+- [Test-t - 15/03/2023](https://youtu.be/ec7ZzqstF0I)
+- [ANOVA - 22/03/2023](https://youtu.be/iL4VF7JZwq4)
+- [Chi-carré et autres tests non-paramétriques - 29/03/2023](https://youtu.be/gGjpkzmHcQI)

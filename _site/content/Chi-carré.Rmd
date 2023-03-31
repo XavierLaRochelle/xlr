@@ -10,21 +10,27 @@ output:
     theme: readable
 ---
 
+```{css, echo=F}
+pre code {
+  white-space: pre;
+}
+```
+
 ```{r setup, include=FALSE}
 # Packages
 library(knitr)
 library(readr)
 library(tibble)
-library(tidyr)
-library(sjmisc)
 library(ggplot2)
-library(dplyr)
+library(crosstable)
+library(DescTools)
+library(effectsize)
 
 # Importer les données
-donnees_brutes <- read_csv("~/OneDrive/Documents/Udem/Hiver 2023/PSY1004/Ateliers R/Guide/data/data_visualisation.csv")
+donnees_brutes <- read_csv("../data/data_visualisation.csv")
 
 # Préparer les données 
-df <- as_tibble(data.frame(id = 1:nrow(donnees_brutes)))
+df <- tibble(id = 1:nrow(donnees_brutes))
 df$intervention <- factor(donnees_brutes$Intervention,
                           levels = c(1,2),
                           labels = c("BPS",
@@ -42,16 +48,16 @@ df$education <- factor(donnees_brutes$Education,
 
 ***Important :*** Ce guide assume que vous savez comment :  
 
-1. rédiger un script RMarkdown (`script_rmarkdown.html`)  
-2. installer et activer des packages (`packages.html`) 
-3. importer une base de données (`importer_les_donnees.html`)  
-4. préparer une base de données (`preparer_les_donnees.html`)  
+1. [Rédiger un script RMarkdown](../content/script_rmarkdown.html)  
+2. [Installer et activer des packages](../content/packages.html)  
+3. [Importer une base de données](../content/importer_les_donnees.html)
+4. [Préparer des données](../content/preparer_les_donnees.html)
 
-Les guides associés à chacune de ces étapes sont disponibles sur Studium.  
+Vous pouvez cliquer sur les liens ci-dessus pour consulter les guides associées. 
 
 ---
 
-# Importer et préparer les données
+## Importer et préparer les données
 Voici la syntaxe nécessaire pour suivre les exemples de ce guide : 
 ```{r, eval=FALSE}
 # Packages
@@ -66,7 +72,7 @@ library(effectsize)
 donnees_brutes <- read_csv("folder path")  
 
 # Préparer les données 
-df <- as_tibble(data.frame(id = 1:nrow(donnees_brutes)))
+df <- tibble(id = 1:nrow(donnees_brutes))
 df$intervention <- factor(donnees_brutes$Intervention,
                           levels = c(1,2),
                           labels = c("BPS",
@@ -85,8 +91,7 @@ df$education <- factor(donnees_brutes$Education,
 Pour suivre les exemples dans ce guide, vous devrez donc :  
 1. avoir téléchargé le fichier `data_visualisation.csv` sur Studium  
 2. noter le `"folder path"`  
-3. utiliser la syntaxe ci-dessus pour préparer les données dans R  
-*Note: N'oubliez pas de changer le folder path!*
+3. exécuter la syntaxe ci-dessus (en changeant le `"folder path"`). 
 
 Voici à quoi devrait ressembler votre banque de données après l'étape de préparation :
 ```{r}
@@ -100,8 +105,62 @@ Le test du chi-carré (ou $\chi^2$) est une méthode statistique qui permet de d
 
 Pour cet exemple, nous testerons l'indépendance entre le groupe d'intervention (variable catégorielle à deux niveaux : `BPS` ou `Contrôle`) et le genre (variable catégorielle à deux niveaux : `Homme` ou `Femme`). 
 
-Pour voir à quoi ressemble les données, nous utiliserons les fonctions `crosstable()` et `as_flextable()` du package `crosstable`. De plus, nous utiliserons l'opérateur `%>%` (ou *pipe operator*) et la fonction `select()` du package `dplyr` pour rendre la syntaxe plus lisible : 
-```{r, warning=FALSE}
+---
+
+## Tableau de contingence
+
+Pour voir à quoi ressemble la relation entre deux variables discrètes/catégorielles, il est commun d'utiliser un tableau de contingence. Un tableau de contingence, également appelé tableau croisé ou tableau de fréquence croisée, est un tableau qui résume la distribution conjointe de deux variables catégorielles. Le tableau de contingence est généralement présenté sous forme de tableau à deux entrées, où chaque entrée correspond à une combinaison de valeurs des deux variables étudiées. Les fréquences (ou effectifs) observées pour chaque combinaison sont inscrites dans les cellules du tableau.
+
+Pour obtenir le tableau de contingence dans R, nous utiliserons la fonction `table()` du package R de base. J'utilise également la fonction `addmargins()` du package `stats` pour obtenir les fréquences marginales (fréquences totales par colonne ou rangé). Enfin, j'utilise l'opérateur `%>%` (présenté dans la section 1.1 du guide [Comparer des moyennes](../content/Comparaison_de_moyennes.html)) et la fonction `select()` du package `dplyr` pour rendre le code plus lisible. Voici la syntaxe :  
+```{r, message=FALSE}
+library(dplyr)
+df %>% 
+    select(genre, intervention) %>% 
+    table() %>% 
+    addmargins()
+```
+
+Dans cet exemple, les deux variables étudiées sont le genre et le groupe expérimental (intervention ou contrôle). Le tableau de contingence montre le nombre de femmes et d'hommes pour chaque groupe expérimentale.
+
+---
+
+### Tableau de proportions
+
+Un tableau de proportions est un type de tableau statistique qui présente les proportions ou les pourcentages des observations dans différentes catégories d'une variable ou à travers les intersections de deux variables.
+
+En général, un tableau de proportions est une alternative intéressante aux tableaux de contingence qui présentent des effectifs ou des fréquences, car il permet une comparaison plus facile entre différentes tailles d'échantillon et facilite la visualisation des résultats.
+
+Si vous souhaitez que les cellules indiquent les proportions d'observations (pourcentage) plutôt que le nombre d'observations (fréquences/effectifs), il est possible d'ajouter la fonction `proportions()` du package de base au code de l'exemple précédent. Voici la syntaxe : 
+
+```{r}
+library(dplyr)
+df %>% 
+    select(genre, intervention) %>% 
+    table() %>% 
+    proportions() %>% 
+    addmargins()
+```
+
+Dans cet exemple, les proportions sont présentées sous forme de décimales, mais elles peuvent également être présentées sous forme de pourcentages en multipliant par 100.
+
+La fonction `proportions()` permet également d'obtenir les proportions relatives à l'aide de l'argument `margin =`. Dans ce type de tableau, les pourcentages indiquent la proportion de chaque catégorie d'une variable par rapport à la totalité de chaque rangé (ou colonne). Par exemple :
+
+```{r}
+library(dplyr)
+df %>% 
+    select(genre, intervention) %>% 
+    table() %>% 
+    proportions(margin = "intervention") %>% 
+    addmargins(margin = 1) # « margin = 1 » permt d'afficher le total par colonne uniquement
+```
+
+Comme vous pouvez le constater, la somme des proportions de chaque colonnes cumul à 1 (ou 100%).
+
+---
+
+### Super tableau tout en un
+Pour obtenir un tableau de contingence plus détaillé (et plus agréable à regarder), il est également possible d'utiliser les fonctions `crosstable()` et `as_flextable()` du package `crosstable` : 
+```{r, warning=FALSE, message=FALSE}
 library(dplyr)
 library(crosstable)
 df %>% 

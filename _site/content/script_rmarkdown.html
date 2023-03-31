@@ -11,7 +11,7 @@
 
 <meta name="author" content="Xavier La Rochelle" />
 
-<meta name="date" content="2023-01-30" />
+<meta name="date" content="2023-03-31" />
 
 <title>Anatomie d’un script RMarkdown</title>
 
@@ -1385,23 +1385,17 @@ overflow-y: auto;
 border: 1px solid #ddd;
 border-radius: 4px;
 }
-.tabset-dropdown > .nav-tabs > li.active:before {
-content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+content: "\e259";
 font-family: 'Glyphicons Halflings';
 display: inline-block;
 padding: 10px;
 border-right: 1px solid #ddd;
 }
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-content: "";
-border: none;
-}
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-content: "";
+content: "\e258";
 font-family: 'Glyphicons Halflings';
-display: inline-block;
-padding: 10px;
-border-right: 1px solid #ddd;
+border: none;
 }
 .tabset-dropdown > .nav-tabs > li.active {
 display: block;
@@ -1505,13 +1499,19 @@ border-radius: 0px;
 
 <h1 class="title toc-ignore">Anatomie d’un script RMarkdown</h1>
 <h4 class="author">Xavier La Rochelle</h4>
-<h4 class="date">2023-01-30</h4>
+<h4 class="date">2023-03-31</h4>
 
 </div>
 
 
 <hr />
 <p><strong>Avant-propos : comment utiliser ce guide?</strong></p>
+<p>Le format de fichier RMarkdown est extrêmement flexible et, pour s’y
+retrouver, il faut savoir distinguer ses sous-composantes. Un script
+RMarkdown peut-être subdivisé en trois types de contenus:
+l’<strong>entête YAML</strong> (section 1), le <strong>texte</strong>
+(section 2) et les <strong>blocs</strong> (ou <code>chunks</code>)
+<strong>de code</strong> (section 3).</p>
 <p>L’objectif de ce guide est de répertorier toutes les informations
 dont vous <em>pourriez</em> avoir besoin pour rédiger un script
 RMarkdown. Ainsi, vous n’aurez pas nécessairement besoin d’utiliser
@@ -1521,21 +1521,20 @@ entendu des guides plus exhaustifs pour apprendre à utiliser RMarkdown
 Definitive Guide</a> ou <a href="https://bookdown.org/yihui/rmarkdown-cookbook/">R Markdown
 Cookbook</a>) mais je tenais à regrouper et vulgariser un sous-ensemble
 d’éléments que je considère plus essentiels.</p>
-<p>Pour parvenir à rédiger vous-même un script RMarkdown, vous devrez
-lire attentivement les sections principales (1, 2 et 3) et la section
-3.1.</p>
-<p>Vous pouvez vous permettre de lire un peu moins attentivement les
-sous-sections suivantes : 1.1 à 1.3, 2.1 à 2.5.</p>
-<p>Le format de fichier RMarkdown est extrêmement flexible et, pour s’y
-retrouver, il faut savoir distinguer ses sous-composantes. Un script
-RMarkdown peut-être subdivisé en trois types de contenus:
-l’<strong>entête YAML</strong>, le <strong>texte</strong> et les
-<strong>blocs de code</strong> (<code>chunks</code>).</p>
+<p>Pour parvenir à rédiger vous-même un script RMarkdown, je vous
+conseil de lire attentivement les sections principales (1, 2 et 3) de ce
+guide ainsi que la section 3.1. Vous pouvez vous permettre de lire un
+peu moins attentivement les sous-sections 1.1 à 1.3 et 2.1 à 2.5.</p>
 <hr />
 <div id="entête-yaml" class="section level1" number="1">
 <h1><span class="header-section-number">1</span> Entête YAML</h1>
-<p>Une entête (donc située au tout début de votre script) de métadonnées
-facultatives entourée de 3 tirets (<code>---</code>).</p>
+<p>L’entête YAML réfère à la section de code située au tout début de
+votre script entourée par 3 tirets (<code>---</code>). Cette entête
+contient des métadonnées facultatives permettant de modifier l’affichage
+de votre document final (c.-à-d. le « output » de votre script). Par
+exemple, l’entête YAML permet de spécifier le type de fichier pour le
+output, le titre de votre document, l’inclusion d’une table des
+matières, etc..</p>
 <p>Voici à quoi pourrait ressembler l’entête YAML d’un script RMarkdown
 destiné à créer un fichier html (comme celui que vous lisez en ce
 moment).</p>
@@ -1631,21 +1630,21 @@ fait pas partie d’un bloc de code ou de l’entête YAML — est formaté en
 astuces pour modifier l’affichage de votre texte dans le document final.
 Voici quelques exemples :</p>
 <hr />
-<div id="sauts-de-ligne-et-de-paragraphe" class="section level2" number="2.1">
-<h2><span class="header-section-number">2.1</span> Sauts de ligne
-(<code>\</code>) et de paragraphe (<code></code>)</h2>
+<div id="sauts-de-ligne" class="section level2" number="2.1">
+<h2><span class="header-section-number">2.1</span> Sauts de ligne</h2>
 <p>Dans votre document final, les sauts de lignes et de paragraphe ne
 reflèteront pas toujours exactement ceux que vous voyez dans votre
 script. L’opérateur <code>\</code> vous permet d’indiquer explicitement
 un saut de ligne. Vous pouvez également indiquer un changement de
-paragraphe en terminant ajoutant deux espaces (<code></code>) à la fin
-de celui-ci ou en laissant une ligne vide dans votre script.</p>
+paragraphe en ajoutant deux espaces (<code></code>) à la fin de celui-ci
+ou en laissant une ligne vide dans votre script.</p>
 <p><em>Note: il est difficile de fournir un exemple de cette
 fonctionnalité.</em></p>
+<hr />
 </div>
-<div id="organiser-votre-texte-avec-des-titres" class="section level2" number="2.2">
-<h2><span class="header-section-number">2.2</span> Organiser votre texte
-avec des titres (<code>#</code>)</h2>
+<div id="titres" class="section level2" number="2.2">
+<h2><span class="header-section-number">2.2</span> Titres
+(<code>#</code>)</h2>
 <p>Les titres sont créés avec le symbole <code>#</code>. Le nombre de
 <code>#</code> détermine le « niveau hiérarchique » de votre titre. Les
 titres apparaîtrons automatiquement dans votre table des matières (si
@@ -1666,9 +1665,12 @@ sous-titre de niveau 4</h4>
 </div>
 </div>
 </div>
-<div id="modifier-laffichage-du-texte" class="section level2" number="2.3">
-<h2><span class="header-section-number">2.3</span> Modifier l’affichage
-du texte</h2>
+<div id="affichage-du-texte" class="section level2" number="2.3">
+<h2><span class="header-section-number">2.3</span> Affichage du
+texte</h2>
+<p>Le format <code>markdown</code> vous permet de modifier l’affichage
+du texte en entourant les passages que vous souhaitez modifier avec
+certains symboles. Voici quelques exemples :</p>
 <p><code>Texte</code> = Texte (aucune modification)<br />
 <code>*Texte*</code> = <em>Texte</em> (italique)<br />
 <code>**Texte**</code> = <strong>Texte</strong> (gras)<br />
@@ -1707,9 +1709,9 @@ Voici une liste non-ordonnée :</p>
 </ol>
 <hr />
 </div>
-<div id="insérer-une-ligne-de-séparation----" class="section level2" number="2.5">
-<h2><span class="header-section-number">2.5</span> Insérer une ligne de
-séparation (<code>---</code>)</h2>
+<div id="ligne-de-séparation" class="section level2" number="2.5">
+<h2><span class="header-section-number">2.5</span> Ligne de
+séparation</h2>
 <p>Mettre trois tirets (<code>---</code>) tout seul permet d’insérer une
 ligne horizontale qui accentue la séparation entre différentes sections
 de votre document. Il peut être pratique de mettre une ligne de
@@ -1757,14 +1759,13 @@ comment y accéder :</em><br />
 <code>Preferences</code> &gt; <code>Code</code> &gt;
 <code>Editing</code> &gt; <code>Modify Keyboard Shortcuts...</code></p>
 <hr />
-<div id="options-globales-ou-bloc-setup" class="section level2" number="3.1">
-<h2><span class="header-section-number">3.1</span> Options globales (ou
-bloc <code>setup</code>)</h2>
+<div id="options-globales" class="section level2" number="3.1">
+<h2><span class="header-section-number">3.1</span> Options globales</h2>
 <p>Il est souvent utile d’inclure un bloc de code au tout début de votre
 script (juste après l’entête YAML) pour spécifier certaines commandes R
 nécessaires au bon fonctionnement de votre document final. Généralement,
 on ajoute l’argument <code>include=FALSE</code> aux paramètres de ce
-bloc de code afin que celui-ci ne s’affiche pas dans le docuement final.
+bloc de code afin que celui-ci ne s’affiche pas dans le document final.
 Voici quatre éléments qu’il est pratique d’incorporer à votre bloc de
 code <code>setup</code> :</p>
 <ul>

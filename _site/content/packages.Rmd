@@ -12,7 +12,7 @@ date: "`r Sys.Date()`"
 
 ---
 
-***Important :*** Pour faciliter votre compréhension de ce guide, vous devez préalablement vous êtres familiarisé.e avec les bases de la rédaction d'un script RMarkdown. Si ce n'est pas déjà fait, veuillez lire attentivement le document `script_rmarkdown.html` sur Studium.
+***Important :*** Pour faciliter votre compréhension de ce guide, vous devez préalablement vous êtres familiarisé.e avec les bases de la rédaction d'un script RMarkdown. Si ce n'est pas déjà fait, veuillez lire attentivement le guide suivant : [Rédiger un script RMarkdown](../content/script_rmarkdown.html). 
 
 ---
 
@@ -32,7 +32,7 @@ install.packages("nom_du_package")
 *Note: Les guillemets sont nécessaires.*
 
 Si le package s'installe correctement, vous devriez être en mesure de le trouver dans l'onglet `packages` de la fenêtre en bas à droite dans RStudio. Puisque cette commande ne doit être exécutée qu'une seule fois, il est inutile de l'inclure à votre script. Vous pouvez simplement l'exécuter dans la console (l'onglet en bas à gauche dans RStudio).  
-![](images/package1.png)  
+![](../images/package1.png)  
 
 
 ## Activation
@@ -42,7 +42,7 @@ library(nom_du_package)
 ```
 
 Pour savior si un package a été correctement activé dans votre session actuelle, vous pouvez vérifier que celui-ci est coché dans l'onglet `packages` de la fenêtre en bas à droite dans RStudio.  
-![](images/package2.png)  
+![](../images/package2.png)  
 
 ## Organisation du script
 Puisque l'activation d'un package ne doit être fait *qu'une seule fois par session*, je vous recommande d'ajouter une section « activation des packages » au début de tous vos script R (dans le bloc de code `setup` directement après l'entête `YAML`). De cette manière, vous pourrez y regrouper tous les packages dont vous avez besoin pour le script en question. Pour plus de détails, veuillez consulter la section 3.1 du document `script_rmarkdown.html` disponible sur Studium.
@@ -75,4 +75,4 @@ Les packages R et leurs fonctions sont généralement accompagnés de *vignettes
 ?nom_de_la_fonction # Note: le package de la fonction doit être activé
 ```
 
-![](images/package3.png)  
+![](../images/package3.png)  

@@ -21,26 +21,23 @@ library(sjmisc)
 library(jmv)
 library(ggplot2)
 
-# Affichage
-opts_chunk$set()
-
 # Importer les données
-donnees_brutes <- read_csv("~/OneDrive/Documents/Udem/Hiver 2023/PSY1004/Ateliers R/Guide/data/data_visualisation.csv") 
+donnees_brutes <- read_csv("../data/data_visualisation.csv") 
 
 # Préparer les données 
-df <- as_tibble(data.frame(id = 1:nrow(donnees_brutes)))
+df <- tibble(id = 1:nrow(donnees_brutes))
 df$symptomesDepressifs <- donnees_brutes$CESD_PreTotal
 df$emotionPositive <- donnees_brutes$PANAS_Pos_Pre
 ```
 
 ***Important :*** Ce guide assume que vous savez comment :  
 
-1. rédiger un script RMarkdown (`script_rmarkdown.html`)  
-2. installer et activer des packages (`packages.html`) 
-3. importer une base de données (`importer_les_donnees.html`)  
-4. préparer une base de données (`preparer_les_donnees.html`)  
+1. [Rédiger un script RMarkdown](../content/script_rmarkdown.html)  
+2. [Installer et activer des packages](../content/packages.html)  
+3. [Importer une base de données](../content/importer_les_donnees.html)
+4. [Préparer des données](../content/preparer_les_donnees.html)
 
-Les guides associés à chacune de ces étapes sont disponibles sur Studium.  
+Vous pouvez cliquer sur les liens ci-dessus pour consulter les guides associées. 
 
 ---
 
@@ -56,7 +53,7 @@ library(ggplot2)
 donnees_brutes <- read_csv("folder path")  
 
 # Préparer les données 
-df <- as_tibble(data.frame(id = 1:nrow(donnees_brutes)))
+df <- tibble(id = 1:nrow(donnees_brutes))
 df$symptomesDepressifs <- donnees_brutes$CESD_PreTotal
 df$emotionPositive <- donnees_brutes$PANAS_Pos_Pre
 ```
@@ -64,9 +61,7 @@ df$emotionPositive <- donnees_brutes$PANAS_Pos_Pre
 Pour suivre les exemples dans ce guide, vous devrez donc :  
 1. avoir téléchargé le fichier `data_visualisation.csv` sur Studium  
 2. noter le `"folder path"`  
-3. utiliser la syntaxe ci-dessus pour préparer les données dans R  
-
-*Note: N'oubliez pas de changer le folder path!*
+3. exécuter la syntaxe ci-dessus (en changeant le `"folder path"`). 
 
 Voici à quoi devrait ressembler votre banque de données après l'étape de préparation :
 ```{r}
@@ -129,4 +124,4 @@ cor.test(df$symptomesDepressifs, df$emotionPositive,
          alternative = "two.sided",
          method = "spearman")
 ```
-*Note* : l'avertissement « Cannot compute exact p-value with ties » est normal. Il indique simplement qu'une méthode d'approximation a été utilisée pour obtenir la valeur de p puisque certaines observations obtiennent le même rang. 
+*Note* : l'avertissement « *Cannot compute exact p-value with ties* » est normal. Il indique simplement qu'une méthode d'approximation a été utilisée pour obtenir la valeur de p puisque certaines observations obtiennent le même rang. 

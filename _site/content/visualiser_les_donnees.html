@@ -11,7 +11,7 @@
 
 <meta name="author" content="Xavier La Rochelle" />
 
-<meta name="date" content="2023-02-06" />
+<meta name="date" content="2023-03-31" />
 
 <title>Visualiser les données</title>
 
@@ -1385,23 +1385,17 @@ overflow-y: auto;
 border: 1px solid #ddd;
 border-radius: 4px;
 }
-.tabset-dropdown > .nav-tabs > li.active:before {
-content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+content: "\e259";
 font-family: 'Glyphicons Halflings';
 display: inline-block;
 padding: 10px;
 border-right: 1px solid #ddd;
 }
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-content: "";
-border: none;
-}
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-content: "";
+content: "\e258";
 font-family: 'Glyphicons Halflings';
-display: inline-block;
-padding: 10px;
-border-right: 1px solid #ddd;
+border: none;
 }
 .tabset-dropdown > .nav-tabs > li.active {
 display: block;
@@ -1505,7 +1499,7 @@ border-radius: 0px;
 
 <h1 class="title toc-ignore">Visualiser les données</h1>
 <h4 class="author">Xavier La Rochelle</h4>
-<h4 class="date">2023-02-06</h4>
+<h4 class="date">2023-03-31</h4>
 
 </div>
 
@@ -1514,18 +1508,19 @@ border-radius: 0px;
 <p><strong><em>Important :</em></strong> Ce guide assume que vous savez
 comment :</p>
 <ol style="list-style-type: decimal">
-<li>rédiger un script RMarkdown
-(<code>script_rmarkdown.html</code>)<br />
+<li><a href="../content/script_rmarkdown.html">Rédiger un script
+RMarkdown</a><br />
 </li>
-<li>installer et activer des packages (<code>packages.html</code>)</li>
-<li>importer une base de données
-(<code>importer_les_donnees.html</code>)<br />
+<li><a href="../content/packages.html">Installer et activer des
+packages</a><br />
 </li>
-<li>préparer une base de données
-(<code>preparer_les_donnees.html</code>)</li>
+<li><a href="../content/importer_les_donnees.html">Importer une base de
+données</a></li>
+<li><a href="../content/preparer_les_donnees.html">Préparer des
+données</a></li>
 </ol>
-<p>Les guides associés à chacune de ces étapes sont disponibles sur
-Studium.</p>
+<p>Vous pouvez cliquer sur les liens ci-dessus pour consulter les guides
+associées.</p>
 <hr />
 <p>Dans ce guide, nous apprendrons à créer des graphiques pour
 visualiser des données.</p>
@@ -1556,6 +1551,8 @@ Studium<br />
 <pre class="r"><code># Packages
 library(readr)
 library(tibble)
+library(ggplot2)
+library(frq)
 
 # Importer les données (data_visualisation.csv)
 donnees_brutes &lt;- read_csv(&quot;folder path&quot;)  

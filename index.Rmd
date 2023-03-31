@@ -1,6 +1,16 @@
 ---
-title: "Main Title"
+title: Xavier La Rochelle
 output: html_document
 ---
 
-This is what will show up on the main page.
+Je suis étudiant à la maîtrise en psychologie à l'université de Montréal. Je m'intéresse principalement à l'évaluation du risque de violence en psychiatrie légale et à la psychométrie. 
+
+---
+
+## Études universitaires
+- Maîtrise en psychologie - Université de Montréal	(08/2022 - … )
+- Baccalauréat en psychologie, cheminement Honor - Université de Montréal	(08/2019 - 07/2022)
+
+## Expériences de travail
+- Auxiliaire à l'enseignement - Université de Montréal (2022-2023)  
+- Assistant de recherche - Institut national de psychiatrie légale Philippe-Pinel (2021-2022)  

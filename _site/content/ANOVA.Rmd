@@ -27,8 +27,18 @@ library(emmeans)
 
 # Importer les données
 data("iris")
-df <- as_tibble(iris)
+df <- tibble(iris)
 ```
+
+***Important :*** Ce guide assume que vous savez comment :  
+
+1. [Rédiger un script RMarkdown](../content/script_rmarkdown.html)  
+2. [Installer et activer des packages](../content/packages.html)  
+3. [Importer une base de données](../content/importer_les_donnees.html)
+4. [Préparer des données](../content/preparer_les_donnees.html)
+5. [Vérifier la normalité](../content/test-t.html) (Section 1.1)
+
+Vous pouvez cliquer sur les liens ci-dessus pour consulter les guides associées. 
 
 ## Banque de données
 
@@ -45,7 +55,7 @@ library(emmeans)
 
 # Importer les données
 data("iris")
-df <- as_tibble(iris)
+df <- tibble(iris)
 ```
 
 
@@ -111,8 +121,6 @@ df_virginica <- subset(df, df$Species == "virginica")
 
 ### Normalité 
 
----
-
 #### Shapiro-Wilk
 
 ```{r}
@@ -146,7 +154,7 @@ qqline(df_versicolor$Petal.Length)
 
 ```{r, message=FALSE}
 library(car)
-leveneTest(Petal.Length ~ Species, data = df)
+leveneTest(df$Petal.Length ~ df$Species)
 ```
 
 ---
@@ -195,10 +203,10 @@ Voici les postulats du test de Kruskal-Wallis :
 
 ## Faire le test
 ```{r}
-kruskal.test(Petal.Length ~ Species, data = df)
+kruskal.test(df$Petal.Length ~ df$Species)
 ```
 
-On peut encore une fois conclure que la longueur moyennes des pétales diffère significativement selon l'espèce de fleur ($\chi^2(2) = 130,4; p < ,05$). 
+On peut encore une fois conclure que la longueur moyenne des pétales diffère significativement selon l'espèce de fleur ($\chi^2(2) = 130,4; p < ,05$). 
 
 ---
 
