@@ -5,7 +5,7 @@ output:
     df_print: paged
 ---
 
-PSY1004H - Session d'hiver 2023
+# PSY1004H - Session d'hiver 2023
 
 1. [Rédiger un script RMarkdown](content/script_rmarkdown.html)  
 2. [Installer et activer des packages](content/packages.html)  
