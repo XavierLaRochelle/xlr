@@ -3,7 +3,9 @@ title: Xavier La Rochelle
 output: html_document
 ---
 
-Je suis étudiant à la maîtrise en psychologie à l'université de Montréal. Je m'intéresse principalement à l'évaluation du risque de violence en psychiatrie légale et à la psychométrie. 
+Allô 👋
+
+Je suis étudiant à la maîtrise en psychologie à l'université de Montréal. Mes projets de recherche concernent l'évaluation du risque de violence en psychiatrie légale et la psychométrie. 
 
 ---
 
