@@ -10,6 +10,12 @@ output:
     theme: readable
 ---
 
+```{css, echo=F}
+pre code {
+  white-space: pre;
+}
+```
+
 ---
 
 ```{r setup, include=FALSE}
