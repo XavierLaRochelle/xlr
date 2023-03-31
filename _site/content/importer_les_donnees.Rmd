@@ -21,8 +21,6 @@ donnees_brutes <- read_csv("../data/data_visualisation.csv")
 
 ---
 
-BLAH
-
 ***Important :*** Ce guide assume que vous savez comment :  
 
 1. rédiger un script RMarkdown (`script_rmarkdown.html`)  
