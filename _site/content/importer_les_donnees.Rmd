@@ -15,17 +15,13 @@ output:
 library(readr)
 library(knitr)
 
-# Affichage
-opts_chunk$set(echo = TRUE)
-
-# Working directory
-opts_chunk$set(root.dir = "~/OneDrive/Documents/Udem/Hiver 2023/PSY1004")
-
 # Importer les données
-donnees_brutes <- read_csv("~/OneDrive/Documents/Udem/Hiver 2023/PSY1004/Ateliers R/preparation_de_donnees_exemple/RCC-5323-F-2020-SM_F1.csv") 
+donnees_brutes <- read_csv("../data/data_visualisation.csv") 
 ```
 
 ---
+
+BLAH
 
 ***Important :*** Ce guide assume que vous savez comment :  
 
@@ -62,12 +58,12 @@ Une fois le package activé, il vous reste deux choses à faire pour importer vo
 Le `folder path` est une *chaîne de caractères* (ou `string`) qui sert à indiquer à R où se trouve le fichier que vous voulez ouvrir dans les dossiers de votre ordinateur. Une manière de trouver le `folder path` spécifique à votre ordinateur est d'utiliser l'onglet `Files` dans la fenêtre en bas à droite dans RStudio. Voici les étapes à suivre : 
 
 - Localiser le fichier `csv` dans vos dossiers et sélectionner le (clic gauche).  
-![](images/folderPath1.png)  
+![](../images/folderPath1.png)  
 
 - Sélectionner l'option `Import Dataset...`.
-![](images/folderPath2.png)  
+![](../images/folderPath2.png)  
 - Dans la section `File/URL:` de la fenêtre `Import Text Data` qui apparaît, copier-coller le `folder path` (chaîne de caractères entre guillemets `""`)
-![](images/folderPath3.png)
+![](../images/folderPath3.png)
 
 # Créer la banque de données brutes
 

@@ -1,0 +1,335 @@
+---
+title: "Data"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    theme: readable
+---
+
+```{r setup, include=FALSE}
+# Packages
+library(knitr)
+library(tibble)
+library(haven)
+library(readr)
+library(sjmisc)
+library(jmv)
+library(ggplot2)
+
+# Affichage
+opts_chunk$set(echo = TRUE)
+
+# Importer les données
+cchs_psy1004 <- read_sav("~/OneDrive/Documents/Udem/Hiver 2023/PSY1004/Ateliers R/preparation_de_donnees_exemple/cchs_psy1004.sav")
+ppi_psy1004 <- read_sav("~/OneDrive/Documents/Udem/Hiver 2023/PSY1004/Ateliers R/preparation_de_donnees_exemple/ppi_psy1004.sav")
+cchs_donnees_brutes <- read_csv("~/OneDrive/Documents/Udem/Hiver 2023/PSY1004/Ateliers R/preparation_de_donnees_exemple/cchs_psy1004.csv")
+ppi_donnees_brutes <- read_csv("~/OneDrive/Documents/Udem/Hiver 2023/PSY1004/Ateliers R/preparation_de_donnees_exemple/ppi_psy1004.csv")
+```
+
+---
+
+# cchs_psy1004
+
+## Variables {.tabset}
+
+### GEO_PRV
+```{r}
+frq(cchs_psy1004$GEO_PRV)
+```
+
+### DHH_SEX
+```{r}
+frq(cchs_psy1004$DHH_SEX)
+```
+
+### DHHGAGE
+```{r}
+frq(cchs_psy1004$DHHGAGE)
+```
+
+### DHHGMS
+```{r}
+frq(cchs_psy1004$DHHGMS)
+```
+
+### SDCDGCGT
+```{r}
+frq(cchs_psy1004$SDCDGCGT)
+```
+
+### SDC_035
+```{r}
+frq(cchs_psy1004$SDC_035)
+```
+
+### EHG2DVR3
+```{r}
+frq(cchs_psy1004$EHG2DVR3)
+```
+
+### GEN_010
+```{r}
+frq(cchs_psy1004$GEN_010)
+descriptives(cchs_psy1004, GEN_010)
+```
+
+### GEN_015
+```{r}
+frq(cchs_psy1004$GEN_015)
+descriptives(cchs_psy1004, GEN_015)
+```
+
+### GEN_020
+```{r}
+frq(cchs_psy1004$GEN_020)
+descriptives(cchs_psy1004, GEN_020)
+```
+
+### GEN_030
+```{r}
+frq(cchs_psy1004$GEN_030)
+descriptives(cchs_psy1004, GEN_030)
+```
+
+### ALCDVTTM
+```{r}
+frq(cchs_psy1004$ALCDVTTM)
+```
+
+### PAA_030
+```{r}
+frq(cchs_psy1004$PAA_030)
+```
+
+### PAA_050
+```{r}
+frq(cchs_psy1004$PAA_050)
+descriptives(cchs_psy1004, PAA_050)
+```
+
+### CMH_005
+```{r}
+frq(cchs_psy1004$CMH_005)
+```
+
+---
+
+# ppi_psy1004
+
+## Variables {.tabset}
+
+### Intervention
+```{r}
+frq(ppi_psy1004$Intervention)
+```
+
+### Age
+```{r}
+frq(ppi_psy1004$Age)
+```
+
+### Revenu
+```{r}
+frq(ppi_psy1004$Revenu)
+```
+
+### Genre
+```{r}
+frq(ppi_psy1004$Genre)
+```
+
+### Education
+```{r}
+frq(ppi_psy1004$Education)
+```
+
+### Flourish_PreTotal
+```{r}
+frq(ppi_psy1004$Flourish_PreTotal)
+descriptives(ppi_psy1004, Flourish_PreTotal)
+```
+
+### Flourish_PostTotal
+```{r}
+frq(ppi_psy1004$Flourish_PostTotal)
+descriptives(ppi_psy1004, Flourish_PostTotal)
+```
+
+### CESD_PreTotal
+```{r}
+frq(ppi_psy1004$CESD_PreTotal)
+descriptives(ppi_psy1004, CESD_PreTotal)
+```
+
+### CESD_PostTotal
+```{r}
+frq(ppi_psy1004$CESD_PostTotal)
+descriptives(ppi_psy1004, CESD_PostTotal)
+```
+
+### AHS_PreTotal
+```{r}
+frq(ppi_psy1004$AHS_PreTotal)
+descriptives(ppi_psy1004, AHS_PreTotal)
+```
+
+### AHS_PostTotal
+```{r}
+frq(ppi_psy1004$AHS_PostTotal)
+descriptives(ppi_psy1004, AHS_PostTotal)
+```
+
+### BMPN_Sat_Aut_Pre
+```{r}
+frq(ppi_psy1004$BMPN_Sat_Aut_Pre)
+descriptives(ppi_psy1004, BMPN_Sat_Aut_Pre)
+```
+
+### BMPN_Sat_Aut_Post
+```{r}
+frq(ppi_psy1004$BMPN_Sat_Aut_Post)
+descriptives(ppi_psy1004, BMPN_Sat_Aut_Post)
+```
+
+### BMPN_Sat_Rel_Pre
+```{r}
+frq(ppi_psy1004$BMPN_Sat_Rel_Pre)
+descriptives(ppi_psy1004, BMPN_Sat_Rel_Pre)
+```
+
+### BMPN_Sat_Rel_Post
+```{r}
+frq(ppi_psy1004$BMPN_Sat_Rel_Post)
+descriptives(ppi_psy1004, BMPN_Sat_Rel_Post)
+```
+
+### BMPN_Sat_Com_Pre
+```{r}
+frq(ppi_psy1004$BMPN_Sat_Com_Pre)
+descriptives(ppi_psy1004, BMPN_Sat_Com_Pre)
+```
+
+### BMPN_Sat_Com_Post
+```{r}
+frq(ppi_psy1004$BMPN_Sat_Com_Post)
+descriptives(ppi_psy1004, BMPN_Sat_Com_Post)
+```
+
+### PANAS_Pos_Pre
+```{r}
+frq(ppi_psy1004$PANAS_Pos_Pre)
+descriptives(ppi_psy1004, PANAS_Pos_Pre)
+```
+
+### PANAS_Pos_Post
+```{r}
+frq(ppi_psy1004$PANAS_Pos_Post)
+descriptives(ppi_psy1004, PANAS_Pos_Post)
+```
+
+# cchs_donnees_brutes
+
+```{r, message=FALSE}
+cchs_donnees_brutes
+```
+
+## Créer la banque de données propre {.tabset}
+```{r}
+df <- as_tibble(data.frame(id = 1:nrow(cchs_donnees_brutes)))
+```
+
+### Genre
+```{r}
+df$genre <- factor(cchs_donnees_brutes$DHH_SEX,
+                   levels = c(1,2),
+                   labels = c("Hommes",
+                              "Femmes"))
+```
+
+### Âge
+```{r}
+df$age <- factor(cchs_donnees_brutes$DHHGAGE,
+                 levels = c(1:16),
+                 labels = c("12 à 14", "15 à 17", "17 à 19", "20 à 24", "25 à 29",
+                            "30 à 34", "35 à 39", "40 à 44", "45 à 49", "50 à 54",
+                            "55 à 59", "60 à 64", "65 à 69", "70 à 74", "75 à 79",
+                            "80 et plus"))
+```
+
+### Temps (minutes) dédié au sport par semaine
+```{r}
+df$min_sports_semaine <- cchs_donnees_brutes$PAA_050
+```
+
+## Résultat
+```{r}
+df
+```
+
+## 
+
+---
+
+# ppi_donnees_brutes
+```{r}
+ppi_donnees_brutes
+```
+
+
+## Nettoyage {.tabset}
+```{r}
+df <- as_tibble(data.frame(id = 1:nrow(ppi_donnees_brutes)))
+```
+
+### Intervention
+```{r}
+df$intervention <- factor(ppi_donnees_brutes$Intervention,
+                          levels = c(1,2),
+                          labels = c("Best possible self",
+                                     "Contrôle"))
+```
+
+### Âge
+```{r}
+df$age <- ppi_donnees_brutes$Age
+```
+
+### Genre
+```{r}
+df$genre <- factor(ppi_donnees_brutes$Genre,
+                   levels = c(1,2),
+                   labels = c("Homme",
+                              "Femme"))
+```
+
+### Émotion positive 
+
+#### pré-intervention
+```{r}
+df$emotionPositivePre <- ppi_donnees_brutes$PANAS_Pos_Pre
+```
+
+#### post-intervention
+```{r}
+df$emotionPositivePost <- ppi_donnees_brutes$PANAS_Pos_Post
+```
+
+### Symptômes dépressifs 
+
+#### pré-intervention
+```{r}
+df$symptomesDepressifsPre <- ppi_donnees_brutes$CESD_PreTotal
+```
+
+#### Post intervention 
+```{r}
+df$symptomesDepressifsPost <- ppi_donnees_brutes$CESD_PostTotal
+```
+
+## Résultat
+```{r}
+df
+```
+
+
