@@ -1,12 +1,20 @@
 ---
-title: "Main page"
+title: "Projets"
 output:   
   html_document: 
     df_print: paged
 ---
 
-This is where you link to the other files, which are in a folder in the main directory. Make sure the name of the folder does not have an underscore in it. You also need to go knit those files within the folder first. And, if you update the file, **you need to reknit it!**. 
+# PSY1004H - Session d'hiver 2023
 
-* [Importer les données](content/importer_les_donnees.html)
-* [Visualiser les données](content/visualiser_les_donnees.html)  
-* [Test-t](content/Test-t.html) 
+1. [Rédiger un script RMarkdown](content/script_rmarkdown.html)  
+2. [Installer et activer des packages](content/packages.html)  
+3. [Importer les données](content/importer_les_donnees.html)
+4. [Préparer les données](content/preparer_les_donnees.html)  
+5. [Visualiser les données](content/visualiser_les_donnees.html)  
+6. [Comparer des moyennes](content/comparaison_de_moyennes.html)  
+7. [Corrélation de Pearson et de Spearman](content/Correlation.html)  
+8. [Test-t et test U Mann-Whitney](content/test-t.html)  
+9. [ANOVA et test de Kruskal-Wallis](content/ANOVA.html)  
+10. [Chi-carré et méthode exact de Fisher](Chi-carré.html)  
+
