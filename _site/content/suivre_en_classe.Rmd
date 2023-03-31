@@ -1,0 +1,121 @@
+---
+title: "Chi-carré et tests non-paramétriques - exemple en classe"
+author: "Votre nom"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+# Packages
+library(knitr)
+library(tibble)
+library(ggplot2)
+library(dplyr)
+library(effectsize)
+library(crosstable)
+library(DescTools)
+
+# Affichage
+opts_chunk$set(echo = TRUE)
+
+# Importer les données
+donnees_brutes <- read_csv("folder path")
+
+# Préparer les données 
+df <- as_tibble(data.frame(id = 1:nrow(donnees_brutes)))
+df$symptomesDepressifs <- donnees_brutes$CESD_PreTotal
+df$emotionPositive <- donnees_brutes$PANAS_Pos_Pre
+df$intervention <- factor(donnees_brutes$Intervention,
+                          levels = c(1,2),
+                          labels = c("BPS",
+                                     "Contrôle"))
+df$genre <- factor(donnees_brutes$Genre,
+                   levels = c(1,2),
+                   labels = c("Homme",
+                              "Femme"))
+df$education <- factor(donnees_brutes$Education,
+                       levels = c(2,3,4),
+                       labels = c("Baccalauréat",
+                                  "Maîtrise",
+                                  "Doctorat"))
+data("iris")
+```
+
+# Avant l'atelier
+
+## Questions par courriel
+
+## Format des questions forum
+
+# Test d’indépendance du chi-carré
+
+Les données pour l'exemple :  
+```{r, warning=FALSE}
+library(dplyr)
+library(crosstable)
+df %>% 
+    select(genre, intervention) %>%
+    crosstable(by = intervention, total = "both") %>% 
+    as_flextable()
+```
+
+## Postulat (fréquences attendues)
+
+## Faire le test
+
+## Calculer la taille d'effet
+
+# Test exact de Fisher
+
+Les données pour l'exemple :  
+```{r, warning=FALSE}
+df %>% 
+    select(genre, education) %>%
+    crosstable(by = education, total = "both") %>% 
+    as_flextable()
+```
+
+## Faire le test
+
+***Mise en garde (taille d'échantillon + nombre de catégories)***
+
+# Corrélation de Spearman
+
+Les données pour l'exemple :
+```{r}
+library(ggplot2)
+ggplot(df, aes(x = symptomesDepressifs, y = emotionPositive)) +
+    geom_point() + 
+    labs(x = "Symptômes dépressifs", y = "Émotions positives") +
+    theme_classic()
+```
+
+## Obtenir la corrélation
+
+## Tester la corrélation
+
+# Test U Mann-Whitney (Wilcoxon Rank Sum test)
+
+Les données pour l'exemple :  
+```{r}
+ggplot(df, aes(x = intervention, y = emotionPositive)) + 
+    geom_boxplot() + 
+    labs(x = "", y = "Émotion positives") +
+    theme_classic()
+```
+
+# Test de Kruskal-Wallis
+
+Les données pour l'exemple : 
+```{r}
+ggplot(iris, aes(x = Species, y = Sepal.Width)) +
+    geom_boxplot() + 
+    labs(x = "", y = "") +
+    theme_classic()
+```
+
+## Faire le test
+
+## Tests post-Hoc
+
+
