@@ -28,3 +28,9 @@ output: html_document
 - [Test-t - 15/03/2023](https://youtu.be/ec7ZzqstF0I)
 - [ANOVA - 22/03/2023](https://youtu.be/iL4VF7JZwq4)
 - [Chi-carré et autres tests non-paramétriques - 29/03/2023](https://youtu.be/gGjpkzmHcQI)
+
+---
+
+### Projets personnels
+
+- [Distribution Dirichlet](https://xavierlarochelle.shinyapps.io/dirichlet/)
