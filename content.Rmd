@@ -42,8 +42,3 @@ output: html_document
 -   [Application pour étudier la distribution Dirichlet](https://xavierlarochelle.shinyapps.io/dirichlet/)
 
 -   [Application pour étudier les corrélations](https://xavierlarochelle.shinyapps.io/Correlation-app/)
-
-
-### Test
-
-![](images/desc.png)
