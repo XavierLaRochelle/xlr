@@ -1,0 +1,23 @@
+---
+title: "Comprendre le Jugement Professionnel Structuré :"
+subtitle: "Modéliser l'association entre les composantes d'évaluation et la cote de risque sommaire"
+author: "Xavier La Rochelle, sous la supervision de Tamsin Higgs"
+date: "`r Sys.Date()`"
+output: 
+  tufte::tufte_html: default
+  tufte::tufte_handout:
+    citation_package: natbib
+    latex_engine: xelatex
+  tufte::tufte_book:
+    citation_package: natbib
+    latex_engine: xelatex
+bibliography: ../ref.bib
+csl: ../universite-de-montreal-apa.csl
+link-citations: yes
+---
+
+# Introduction
+
+La prévention des comportements violents est un enjeu de premier plan en psychologie légale. Pour cette raison, le risque de violence est un concept fréquemment utilisé pour orienter la prise de décision dans une variété de contextes cliniques ou correctionnels. L’estimation du risque désigne communément l’utilisation de facteurs de risque pour estimer la probabilité de l’incidence d’un issu clinique (p. ex. la violence) dans une population [@skeem_gender_2005]. On associe généralement l’estimation du risque de violence aux professionnels œuvrant dans le domaine de la santé mentale (ex. : psychiatres, psychologues, criminologues, etc.). En pratique toutefois, il est courant de voir des professionnels non cliniques (ex. : policiers, agents de probation) être appelés à se prononcer sur le risque de récidive d’un individu (Douglas et Kropp, 2002). Quel que soit le contexte, une estimation du risque émise par un professionnel peut avoir d’importantes répercussions sur la vie des individus concernés. En santé mentale par exemple, ces répercussions peuvent inclure l’hospitalisation involontaire, le suivi obligatoire en communauté, la prise forcée de médication et la perte de droits civils importants (Skeem et al., 2005). 
+
+# Références
