@@ -1,10 +1,5 @@
 ---
-output: 
-  html_document:
-    toc: true
-    toc_float: true
-    number_section: true
-    theme: readable
+output: html_document
 title: "Anatomie d'un script RMarkdown"
 author: "Xavier La Rochelle"
 date: "`r Sys.Date()`"

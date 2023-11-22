@@ -1,5 +1,5 @@
 ---
-title: Xavier La Rochelle
+title: "Xavier La Rochelle"
 output: html_document
 ---
 
