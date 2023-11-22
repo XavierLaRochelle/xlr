@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Xavier La Rochelle" />
+
+<meta name="date" content="2023-11-22" />
+
+<title>Chi-carré et méthode exacte de Fisher</title>
+
+<script src="site_libs/header-attrs-2.20/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/yeti.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">À propos</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="content.html">Projets</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Tutoriels R
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="script_rmarkdown.html">Rédiger un script RMarkdown</a>
+    </li>
+    <li>
+      <a href="packages.html">Installer et activer des packages</a>
+    </li>
+    <li>
+      <a href="importer_les_donnees.html">Importer les données</a>
+    </li>
+    <li>
+      <a href="preparer_les_donnees.html">Préparer les données</a>
+    </li>
+    <li>
+      <a href="visualiser_les_donnees.html">Visualiser les données</a>
+    </li>
+    <li>
+      <a href="comparaison_de_moyennes.html">Comparer des moyennes</a>
+    </li>
+    <li>
+      <a href="Correlation.html">Corrélation de Pearson et de Spearman</a>
+    </li>
+    <li>
+      <a href="test-t.html">Test-t et test U Mann-Whitney</a>
+    </li>
+    <li>
+      <a href="ANOVA.html">ANOVA et test de Kruskal-Wallis</a>
+    </li>
+    <li>
+      <a href="Chi-carré.html">Chi-carré et méthode exact de Fisher</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Chi-carré et méthode exacte de Fisher</h1>
+<h4 class="author">Xavier La Rochelle</h4>
+<h4 class="date">2023-11-22</h4>
+
+</div>
+
+
+<style type="text/css">
+pre code {
+  white-space: pre;
+}
+</style>
+<p><strong><em>Important :</em></strong> Ce guide assume que vous savez
+comment :</p>
+<ol style="list-style-type: decimal">
+<li><a href="script_rmarkdown.html">Rédiger un script
+RMarkdown</a><br />
+</li>
+<li><a href="packages.html">Installer et activer des packages</a><br />
+</li>
+<li><a href="importer_les_donnees.html">Importer une base de
+données</a></li>
+<li><a href="preparer_les_donnees.html">Préparer des données</a></li>
+</ol>
+<p>Vous pouvez cliquer sur les liens ci-dessus pour consulter les guides
+associées.</p>
+<hr />
+<div id="importer-et-préparer-les-données" class="section level2"
+number="0.1">
+<h2><span class="header-section-number">0.1</span> Importer et préparer
+les données</h2>
+<p>Voici la syntaxe nécessaire pour suivre les exemples de ce guide
+:</p>
+<pre class="r"><code># Packages
+library(readr)
+library(tibble)
+library(dplyr)
+library(crosstable)
+library(DescTools)
+library(effectsize)
+
+# Importer les données (data_visualisation.csv)
+donnees_brutes &lt;- read_csv(&quot;folder path&quot;)  
+
+# Préparer les données 
+df &lt;- tibble(id = 1:nrow(donnees_brutes))
+df$intervention &lt;- factor(donnees_brutes$Intervention,
+                          levels = c(1,2),
+                          labels = c(&quot;BPS&quot;,
+                                     &quot;Contrôle&quot;))
+df$genre &lt;- factor(donnees_brutes$Genre,
+                   levels = c(1,2),
+                   labels = c(&quot;Homme&quot;,
+                              &quot;Femme&quot;))
+df$education &lt;- factor(donnees_brutes$Education,
+                       levels = c(2,3,4),
+                       labels = c(&quot;Baccalauréat&quot;,
+                                  &quot;Maîtrise&quot;,
+                                  &quot;Doctorat&quot;))</code></pre>
+<p>Pour suivre les exemples dans ce guide, vous devrez donc :<br />
+1. avoir téléchargé le fichier <code>data_visualisation.csv</code> sur
+Studium<br />
+2. noter le <code>"folder path"</code><br />
+3. exécuter la syntaxe ci-dessus (en changeant le
+<code>"folder path"</code>).</p>
+<p>Voici à quoi devrait ressembler votre banque de données après l’étape
+de préparation :</p>
+<pre class="r"><code>df</code></pre>
+<pre><code>## # A tibble: 100 × 4
+##       id intervention genre education   
+##    &lt;int&gt; &lt;fct&gt;        &lt;fct&gt; &lt;fct&gt;       
+##  1     1 BPS          Femme Baccalauréat
+##  2     2 Contrôle     Femme Baccalauréat
+##  3     3 BPS          Femme Baccalauréat
+##  4     4 Contrôle     Femme Baccalauréat
+##  5     5 BPS          Femme Baccalauréat
+##  6     6 Contrôle     Femme Baccalauréat
+##  7     7 BPS          Femme Baccalauréat
+##  8     8 BPS          Femme Baccalauréat
+##  9     9 BPS          Homme Baccalauréat
+## 10    10 Contrôle     Femme Baccalauréat
+## # … with 90 more rows</code></pre>
+<hr />
+</div>
+<div id="test-dindépendance-du-chi-carré" class="section level1"
+number="1">
+<h1><span class="header-section-number">1</span> Test d’indépendance du
+chi-carré</h1>
+<p>Le test du chi-carré (ou <span class="math inline">\(\chi^2\)</span>)
+est une méthode statistique qui permet de déterminer si deux variables
+catégorielles sont indépendantes l’une de l’autre ou non.</p>
+<p>Pour cet exemple, nous testerons l’indépendance entre le groupe
+d’intervention (variable catégorielle à deux niveaux : <code>BPS</code>
+ou <code>Contrôle</code>) et le genre (variable catégorielle à deux
+niveaux : <code>Homme</code> ou <code>Femme</code>).</p>
+<hr />
+<div id="tableau-de-contingence" class="section level2" number="1.1">
+<h2><span class="header-section-number">1.1</span> Tableau de
+contingence</h2>
+<p>Pour voir à quoi ressemble la relation entre deux variables
+discrètes/catégorielles, il est commun d’utiliser un tableau de
+contingence. Un tableau de contingence, également appelé tableau croisé
+ou tableau de fréquence croisée, est un tableau qui résume la
+distribution conjointe de deux variables catégorielles. Le tableau de
+contingence est généralement présenté sous forme de tableau à deux
+entrées, où chaque entrée correspond à une combinaison de valeurs des
+deux variables étudiées. Les fréquences (ou effectifs) observées pour
+chaque combinaison sont inscrites dans les cellules du tableau.</p>
+<p>Pour obtenir le tableau de contingence dans R, nous utiliserons la
+fonction <code>table()</code> du package R de base. J’utilise également
+la fonction <code>addmargins()</code> du package <code>stats</code> pour
+obtenir les fréquences marginales (fréquences totales par colonne ou
+rangé). Enfin, j’utilise l’opérateur <code>%&gt;%</code> (présenté dans
+la section 1.1 du guide <a
+href="../content/Comparaison_de_moyennes.html">Comparer des
+moyennes</a>) et la fonction <code>select()</code> du package
+<code>dplyr</code> pour rendre le code plus lisible. Voici la syntaxe
+:</p>
+<pre class="r"><code>library(dplyr)
+df %&gt;% 
+    select(genre, intervention) %&gt;% 
+    table() %&gt;% 
+    addmargins()</code></pre>
+<pre><code>##        intervention
+## genre   BPS Contrôle Sum
+##   Homme  13       14  27
+##   Femme  35       38  73
+##   Sum    48       52 100</code></pre>
+<p>Dans cet exemple, les deux variables étudiées sont le genre et le
+groupe expérimental (intervention ou contrôle). Le tableau de
+contingence montre le nombre de femmes et d’hommes pour chaque groupe
+expérimentale.</p>
+<hr />
+<div id="tableau-de-proportions" class="section level3" number="1.1.1">
+<h3><span class="header-section-number">1.1.1</span> Tableau de
+proportions</h3>
+<p>Un tableau de proportions est un type de tableau statistique qui
+présente les proportions ou les pourcentages des observations dans
+différentes catégories d’une variable ou à travers les intersections de
+deux variables.</p>
+<p>En général, un tableau de proportions est une alternative
+intéressante aux tableaux de contingence qui présentent des effectifs ou
+des fréquences, car il permet une comparaison plus facile entre
+différentes tailles d’échantillon et facilite la visualisation des
+résultats.</p>
+<p>Si vous souhaitez que les cellules indiquent les proportions
+d’observations (pourcentage) plutôt que le nombre d’observations
+(fréquences/effectifs), il est possible d’ajouter la fonction
+<code>proportions()</code> du package de base au code de l’exemple
+précédent. Voici la syntaxe :</p>
+<pre class="r"><code>library(dplyr)
+df %&gt;% 
+    select(genre, intervention) %&gt;% 
+    table() %&gt;% 
+    proportions() %&gt;% 
+    addmargins()</code></pre>
+<pre><code>##        intervention
+## genre    BPS Contrôle  Sum
+##   Homme 0.13     0.14 0.27
+##   Femme 0.35     0.38 0.73
+##   Sum   0.48     0.52 1.00</code></pre>
+<p>Dans cet exemple, les proportions sont présentées sous forme de
+décimales, mais elles peuvent également être présentées sous forme de
+pourcentages en multipliant par 100.</p>
+<p>La fonction <code>proportions()</code> permet également d’obtenir les
+proportions relatives à l’aide de l’argument <code>margin =</code>. Dans
+ce type de tableau, les pourcentages indiquent la proportion de chaque
+catégorie d’une variable par rapport à la totalité de chaque rangé (ou
+colonne). Par exemple :</p>
+<pre class="r"><code>library(dplyr)
+df %&gt;% 
+    select(genre, intervention) %&gt;% 
+    table() %&gt;% 
+    proportions(margin = &quot;intervention&quot;) %&gt;% 
+    addmargins(margin = 1) # « margin = 1 » permt d&#39;afficher le total par colonne uniquement</code></pre>
+<pre><code>##        intervention
+## genre         BPS  Contrôle
+##   Homme 0.2708333 0.2692308
+##   Femme 0.7291667 0.7307692
+##   Sum   1.0000000 1.0000000</code></pre>
+<p>Comme vous pouvez le constater, la somme des proportions de chaque
+colonnes cumul à 1 (ou 100%).</p>
+<hr />
+</div>
+<div id="super-tableau-tout-en-un" class="section level3"
+number="1.1.2">
+<h3><span class="header-section-number">1.1.2</span> Super tableau tout
+en un</h3>
+<p>Pour obtenir un tableau de contingence plus détaillé (et plus
+agréable à regarder), il est également possible d’utiliser les fonctions
+<code>crosstable()</code> et <code>as_flextable()</code> du package
+<code>crosstable</code> :</p>
+<pre class="r"><code>library(dplyr)
+library(crosstable)
+df %&gt;% 
+    select(genre, intervention) %&gt;%
+    crosstable(by = intervention, total = &quot;both&quot;) %&gt;% 
+    as_flextable()</code></pre>
+<div class="tabwid"><style>.cl-af9f2b04{}.cl-af767150{font-family:'Helvetica';font-size:11pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-af76716e{font-family:'Helvetica';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-af984604{margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-af98460e{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-af985ee6{width:0.676in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(0, 0, 0, 1.00);border-top: 1.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-af985ef0{width:0.863in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(0, 0, 0, 1.00);border-top: 1.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-af985ef1{width:1.117in;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 1.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-af985efa{width:1.287in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(0, 0, 0, 1.00);border-top: 1.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-af985efb{width:0.676in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-af985efc{width:0.863in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-af985f04{width:1.117in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-af985f05{width:1.287in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-af985f0e{width:0.676in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-af985f0f{width:0.863in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-af985f10{width:1.117in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-af985f18{width:1.287in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-af985f19{width:0.676in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-af985f1a{width:0.863in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-af985f22{width:1.117in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-af985f23{width:1.287in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing='true' class='cl-af9f2b04'><thead><tr style="overflow-wrap:break-word;"><th  rowspan="2"class="cl-af985ee6"><p class="cl-af984604"><span class="cl-af767150">label</span></p></th><th  rowspan="2"class="cl-af985ef0"><p class="cl-af984604"><span class="cl-af767150">variable</span></p></th><th  colspan="2"class="cl-af985ef1"><p class="cl-af984604"><span class="cl-af767150">intervention</span></p></th><th  rowspan="2"class="cl-af985efa"><p class="cl-af984604"><span class="cl-af767150">Total</span></p></th></tr><tr style="overflow-wrap:break-word;"><th class="cl-af985f04"><p class="cl-af984604"><span class="cl-af767150">BPS</span></p></th><th class="cl-af985f04"><p class="cl-af984604"><span class="cl-af767150">Contrôle</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td  rowspan="3"class="cl-af985f0e"><p class="cl-af98460e"><span class="cl-af76716e">genre</span></p></td><td class="cl-af985f0f"><p class="cl-af98460e"><span class="cl-af76716e">Homme</span></p></td><td class="cl-af985f10"><p class="cl-af98460e"><span class="cl-af76716e">13 (48.15%)</span></p></td><td class="cl-af985f10"><p class="cl-af98460e"><span class="cl-af76716e">14 (51.85%)</span></p></td><td class="cl-af985f18"><p class="cl-af98460e"><span class="cl-af76716e">27 (27.00%)</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-af985f0f"><p class="cl-af98460e"><span class="cl-af76716e">Femme</span></p></td><td class="cl-af985f10"><p class="cl-af98460e"><span class="cl-af76716e">35 (47.95%)</span></p></td><td class="cl-af985f10"><p class="cl-af98460e"><span class="cl-af76716e">38 (52.05%)</span></p></td><td class="cl-af985f18"><p class="cl-af98460e"><span class="cl-af76716e">73 (73.00%)</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-af985f1a"><p class="cl-af98460e"><span class="cl-af76716e">Total</span></p></td><td class="cl-af985f22"><p class="cl-af98460e"><span class="cl-af76716e">48 (48.00%)</span></p></td><td class="cl-af985f22"><p class="cl-af98460e"><span class="cl-af76716e">52 (52.00%)</span></p></td><td class="cl-af985f23"><p class="cl-af98460e"><span class="cl-af76716e">100 (100.00%)</span></p></td></tr></tbody></table></div>
+<hr />
+</div>
+</div>
+<div id="postulats" class="section level2" number="1.2">
+<h2><span class="header-section-number">1.2</span> Postulats</h2>
+<p>Le test d’indépendance du chi-carré comprend deux postulats :</p>
+<ol style="list-style-type: decimal">
+<li>Les catégories des variables catégorielles sont mutuellement
+exclusives : ☑<br />
+</li>
+<li>Dans au moins 80% des cellules, la fréquence attendue est supérieure
+ou égale à 5 : à vérifier</li>
+</ol>
+<p>Les fréquences attendues représente le produit des proportions
+marginales du tableau de contingence des variables <code>genre</code> et
+<code>intervention</code>. Pour obtenir ces fréquences attendues, nous
+pouvons utiliser la fonction <code>table()</code> du package de base et
+la fonction <code>ExpFreq()</code> du package <code>DescTools</code>.
+Comme pour le bloc de code précédent, j’utilise l’opérateur
+<code>%&gt;%</code> et la fonction <code>select()</code> du package
+<code>dplyr</code> pour simplifier la syntaxe :</p>
+<pre class="r"><code>library(dplyr)
+library(DescTools)
+df %&gt;% 
+    select(genre, intervention) %&gt;% 
+    table() %&gt;% 
+    ExpFreq()</code></pre>
+<pre><code>##        intervention
+## genre     BPS Contrôle
+##   Homme 12.96    14.04
+##   Femme 35.04    37.96</code></pre>
+<p>Aucune des cellules n’indiquent une fréquence attendue inférieure à
+ou égale à 5. Nous pouvons donc procéder avec le test du chi-carré.</p>
+<hr />
+</div>
+<div id="faire-le-test" class="section level2" number="1.3">
+<h2><span class="header-section-number">1.3</span> Faire le test</h2>
+<p>La fonction <code>chisq.test()</code> permet de performer le test du
+chi-carré dans R. Cette fonction nécessite de spécifier les deux
+variables catégorielles dont on souhaite tester l’indépendance :</p>
+<pre class="r"><code>chisq.test(df$genre, df$intervention)</code></pre>
+<pre><code>## 
+##  Pearson&#39;s Chi-squared test with Yates&#39; continuity correction
+## 
+## data:  df$genre and df$intervention
+## X-squared = 0, df = 1, p-value = 1</code></pre>
+<p>On peut conclure que l’association entre l’attribution au groupe
+d’intervention ou au groupe contrôle et le genre n’est pas significative
+(<span class="math inline">\(\chi^2(1) = 0; p = 1\)</span>).</p>
+<hr />
+<div id="note-correction-de-yates-pour-la-continuité"
+class="section level3" number="1.3.1">
+<h3><span class="header-section-number">1.3.1</span> Note : correction
+de Yates pour la continuité</h3>
+<p>Par défaut, la fonction <code>chisq.test()</code> applique la
+correction de Yates pour la continuité (voir <a
+href="https://en.wikipedia.org/wiki/Yates%27s_correction_for_continuity">cet
+article wikipedia</a> pour plus d’information). Il est possible de ne
+pas appliquer cette correction en assignant <code>FALSE</code> à
+l’argument <code>correct</code>, comme ceci :</p>
+<pre class="r"><code>chisq.test(df$genre, df$intervention,
+           correct = FALSE)</code></pre>
+<pre><code>## 
+##  Pearson&#39;s Chi-squared test
+## 
+## data:  df$genre and df$intervention
+## X-squared = 0.00032523, df = 1, p-value = 0.9856</code></pre>
+<hr />
+</div>
+</div>
+<div id="calculer-la-taille-deffet" class="section level2" number="1.4">
+<h2><span class="header-section-number">1.4</span> Calculer la taille
+d’effet</h2>
+<p>Puisque le chi-carré n’est pas significatif, la taille d’effet n’est
+pas interprétable. Toutefois, pour les besoins de ce guide, je vous
+montre tout de même comment obtenir la taille d’effet.</p>
+<p>L’indice de taille d’effet généralement rapporté pour un test de
+chi-carré est le V de Cramer. Cet indice peut être obtenu à l’aide de la
+fonction <code>cramers_v()</code> du package <code>effectsize</code>
+:</p>
+<pre class="r"><code>library(effectsize)
+cramers_v(df$genre, df$intervention)</code></pre>
+<pre><code>## Cramer&#39;s V (adj.) |       95% CI
+## --------------------------------
+## 0.00              | [0.00, 1.00]
+## 
+## - One-sided CIs: upper bound fixed at [1.00].</code></pre>
+<p>Voici les critères d’interprétation du V de Cramer :</p>
+<ul>
+<li><span class="math inline">\(v &lt; 0.10\)</span> : effet
+négligeable<br />
+</li>
+<li><span class="math inline">\(0.10 ≤ v ≤ 0.20\)</span> : effet
+faible<br />
+</li>
+<li><span class="math inline">\(0.20 ≤ v ≤ 0.40\)</span> : effet
+modéré<br />
+</li>
+<li><span class="math inline">\(0.40 ≤ v ≤ 0.60\)</span> : effet assez
+fort<br />
+</li>
+<li><span class="math inline">\(v &gt; 0.60\)</span> : effet fort</li>
+</ul>
+<p>Si l’association entre le genre et le groupe d’intervention avait été
+significative, nous aurions conclu qu’elle correspond à une taille
+d’effet négligeable (<span class="math inline">\(v ≈ 0,00\)</span>).</p>
+<hr />
+</div>
+</div>
+<div id="test-exact-de-fisher" class="section level1" number="2">
+<h1><span class="header-section-number">2</span> Test exact de
+Fisher</h1>
+<p>Comme pour le test du chi-carré, le test exact de Fisher permet de
+déterminer si deux variables catégorielles sont indépendantes l’une de
+l’autre ou non. La principale différence est que le test exact de Fisher
+est basé sur la distribution hypergéométrique et peut être utilisé
+lorsque les conditions d’application du test du chi-carré ne sont pas
+satisfaites (fréquences attendues ≥ 5 dans au moins 80% des
+cellules).</p>
+<p>Pour cet exemple, nous testerons l’indépendance entre le niveau
+d’éducation des participants (variable catégorielle à trois niveaux :
+<code>Baccalauréat</code>, <code>Maîtrise</code> ou
+<code>Doctorat</code>) et le genre (variable catégorielle à deux niveaux
+: <code>Homme</code> ou <code>Femme</code>). Voici à quoi ressemble les
+données :</p>
+<pre class="r"><code>library(dplyr)
+library(crosstable)
+df %&gt;% 
+    select(genre, education) %&gt;%
+    crosstable(by = genre, total = &quot;both&quot;) %&gt;% 
+    as_flextable()</code></pre>
+<div class="tabwid"><style>.cl-b0721848{}.cl-b06b3f6e{font-family:'Helvetica';font-size:11pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-b06b3f82{font-family:'Helvetica';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-b06dd5f8{margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-b06dd602{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-b06de778{width:0.948in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(0, 0, 0, 1.00);border-top: 1.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-b06de782{width:1.177in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(0, 0, 0, 1.00);border-top: 1.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-b06de783{width:1.117in;background-color:transparent;vertical-align: middle;border-bottom: 1pt solid rgba(0, 0, 0, 1.00);border-top: 1.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-b06de78c{width:1.287in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(0, 0, 0, 1.00);border-top: 1.5pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-b06de78d{width:0.948in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-b06de796{width:1.177in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-b06de797{width:1.117in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-b06de7a0{width:1.287in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(0, 0, 0, 1.00);border-top: 1pt solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(255, 255, 255, 0.00);border-right: 0 solid rgba(255, 255, 255, 0.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-b06de7a1{width:0.948in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-b06de7a2{width:1.177in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-b06de7d2{width:1.117in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-b06de7dc{width:1.287in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-b06de7dd{width:0.948in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-b06de7e6{width:1.177in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-b06de7e7{width:1.117in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-b06de7f0{width:1.287in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing='true' class='cl-b0721848'><thead><tr style="overflow-wrap:break-word;"><th  rowspan="2"class="cl-b06de778"><p class="cl-b06dd5f8"><span class="cl-b06b3f6e">label</span></p></th><th  rowspan="2"class="cl-b06de782"><p class="cl-b06dd5f8"><span class="cl-b06b3f6e">variable</span></p></th><th  colspan="2"class="cl-b06de783"><p class="cl-b06dd5f8"><span class="cl-b06b3f6e">genre</span></p></th><th  rowspan="2"class="cl-b06de78c"><p class="cl-b06dd5f8"><span class="cl-b06b3f6e">Total</span></p></th></tr><tr style="overflow-wrap:break-word;"><th class="cl-b06de797"><p class="cl-b06dd5f8"><span class="cl-b06b3f6e">Homme</span></p></th><th class="cl-b06de797"><p class="cl-b06dd5f8"><span class="cl-b06b3f6e">Femme</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td  rowspan="4"class="cl-b06de7a1"><p class="cl-b06dd602"><span class="cl-b06b3f82">education</span></p></td><td class="cl-b06de7a2"><p class="cl-b06dd602"><span class="cl-b06b3f82">Baccalauréat</span></p></td><td class="cl-b06de7d2"><p class="cl-b06dd602"><span class="cl-b06b3f82">19 (26.76%)</span></p></td><td class="cl-b06de7d2"><p class="cl-b06dd602"><span class="cl-b06b3f82">52 (73.24%)</span></p></td><td class="cl-b06de7dc"><p class="cl-b06dd602"><span class="cl-b06b3f82">71 (71.00%)</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-b06de7a2"><p class="cl-b06dd602"><span class="cl-b06b3f82">Maîtrise</span></p></td><td class="cl-b06de7d2"><p class="cl-b06dd602"><span class="cl-b06b3f82">7 (26.92%)</span></p></td><td class="cl-b06de7d2"><p class="cl-b06dd602"><span class="cl-b06b3f82">19 (73.08%)</span></p></td><td class="cl-b06de7dc"><p class="cl-b06dd602"><span class="cl-b06b3f82">26 (26.00%)</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-b06de7a2"><p class="cl-b06dd602"><span class="cl-b06b3f82">Doctorat</span></p></td><td class="cl-b06de7d2"><p class="cl-b06dd602"><span class="cl-b06b3f82">1 (33.33%)</span></p></td><td class="cl-b06de7d2"><p class="cl-b06dd602"><span class="cl-b06b3f82">2 (66.67%)</span></p></td><td class="cl-b06de7dc"><p class="cl-b06dd602"><span class="cl-b06b3f82">3 (3.00%)</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-b06de7e6"><p class="cl-b06dd602"><span class="cl-b06b3f82">Total</span></p></td><td class="cl-b06de7e7"><p class="cl-b06dd602"><span class="cl-b06b3f82">27 (27.00%)</span></p></td><td class="cl-b06de7e7"><p class="cl-b06dd602"><span class="cl-b06b3f82">73 (73.00%)</span></p></td><td class="cl-b06de7f0"><p class="cl-b06dd602"><span class="cl-b06b3f82">100 (100.00%)</span></p></td></tr></tbody></table></div>
+<hr />
+<div id="posultats" class="section level2" number="2.1">
+<h2><span class="header-section-number">2.1</span> Posultats</h2>
+<p>Le test exact de Fisher comprend donc un seul postulat :</p>
+<ol style="list-style-type: decimal">
+<li>Les catégories des variables catégorielles sont mutuellement
+exclusives : ☑</li>
+</ol>
+<p>Dans ce cas-ci, ont peut confirmer que le test exact de Fisher est
+plus appropriés que le chi-carré en générant les fréquences attendues
+:</p>
+<pre class="r"><code>library(dplyr)
+library(DescTools)
+df %&gt;% 
+    select(genre, education) %&gt;% 
+    table() %&gt;% 
+    ExpFreq()</code></pre>
+<pre><code>##        education
+## genre   Baccalauréat Maîtrise Doctorat
+##   Homme        19.17     7.02     0.81
+##   Femme        51.83    18.98     2.19</code></pre>
+<p>En effet, puisqu’une faible proportion des participants ont un
+doctorat, la fréquence attendue des cellules correspondant à de ce
+niveau de la variable <code>education</code> est inférieur à 5.</p>
+<hr />
+</div>
+<div id="faire-le-test-1" class="section level2" number="2.2">
+<h2><span class="header-section-number">2.2</span> Faire le test</h2>
+<p>Pour exécuter le test exact de Fisher dans R, vous pouvez utiliser la
+fonction <code>fisher.test()</code> qui est incluse dans le package
+<code>stats</code>. Voici la syntaxe générale de cette fonction :</p>
+<pre class="r"><code>fisher.test(df$genre, df$education)</code></pre>
+<pre><code>## 
+##  Fisher&#39;s Exact Test for Count Data
+## 
+## data:  df$genre and df$education
+## p-value = 1
+## alternative hypothesis: two.sided</code></pre>
+<p>On peut conclure que l’association entre le genre et l’éducation
+n’est pas significative (<span class="math inline">\(p =
+1\)</span>).</p>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

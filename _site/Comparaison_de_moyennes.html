@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Xavier La Rochelle" />
+
+<meta name="date" content="2023-11-22" />
+
+<title>Comparaison de moyennes</title>
+
+<script src="site_libs/header-attrs-2.20/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/yeti.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">À propos</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="content.html">Projets</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Tutoriels R
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="script_rmarkdown.html">Rédiger un script RMarkdown</a>
+    </li>
+    <li>
+      <a href="packages.html">Installer et activer des packages</a>
+    </li>
+    <li>
+      <a href="importer_les_donnees.html">Importer les données</a>
+    </li>
+    <li>
+      <a href="preparer_les_donnees.html">Préparer les données</a>
+    </li>
+    <li>
+      <a href="visualiser_les_donnees.html">Visualiser les données</a>
+    </li>
+    <li>
+      <a href="comparaison_de_moyennes.html">Comparer des moyennes</a>
+    </li>
+    <li>
+      <a href="Correlation.html">Corrélation de Pearson et de Spearman</a>
+    </li>
+    <li>
+      <a href="test-t.html">Test-t et test U Mann-Whitney</a>
+    </li>
+    <li>
+      <a href="ANOVA.html">ANOVA et test de Kruskal-Wallis</a>
+    </li>
+    <li>
+      <a href="Chi-carré.html">Chi-carré et méthode exact de Fisher</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Comparaison de moyennes</h1>
+<h4 class="author">Xavier La Rochelle</h4>
+<h4 class="date">2023-11-22</h4>
+
+</div>
+
+
+<hr />
+<p><strong><em>Important :</em></strong> Ce guide assume que vous savez
+comment :</p>
+<ol style="list-style-type: decimal">
+<li><a href="script_rmarkdown.html">Rédiger un script
+RMarkdown</a><br />
+</li>
+<li><a href="packages.html">Installer et activer des packages</a><br />
+</li>
+<li><a href="importer_les_donnees.html">Importer une base de
+données</a></li>
+<li><a href="preparer_les_donnees.html">Préparer des données</a></li>
+</ol>
+<p>Vous pouvez cliquer sur les liens ci-dessus pour consulter les guides
+associées.</p>
+<hr />
+<div id="importer-et-préparer-les-données" class="section level2"
+number="0.1">
+<h2><span class="header-section-number">0.1</span> Importer et préparer
+les données</h2>
+<p>Dans ce guide, nous utiliserons deux variables du fichier
+<code>data_visualisation.csv</code>, soit le Genre (<code>genre</code>)
+et les émotions positives (<code>emotionPositive</code>). Pour vous
+évitez de tout re-coder, j’ai pris le temps d’écrire la syntaxe
+nécessaire pour importer et préparer les données :</p>
+<pre class="r"><code># Packages
+library(readr)
+library(tibble)
+library(ggplot2)
+library(Hmisc)
+
+# Importer les données (data_visualisation.csv)
+donnees_brutes &lt;- read_csv(&quot;folder path&quot;)  
+
+# Préparer les données 
+df &lt;- as_tibble(data.frame(id = 1:nrow(donnees_brutes)))
+df$genre &lt;- factor(donnees_brutes$Genre,
+                   levels = c(1,2),
+                   labels = c(&quot;Homme&quot;, &quot;Femme&quot;))
+df$emotionPositive &lt;- donnees_brutes$PANAS_Pos_Pre</code></pre>
+<p>Pour suivre les exemples dans ce guide, vous devrez donc :<br />
+1. avoir téléchargé le fichier <code>data_visualisation.csv</code> sur
+Studium<br />
+2. noter le <code>"folder path"</code><br />
+3. exécuter la syntaxe ci-dessus (en changeant le
+<code>"folder path"</code>).</p>
+<p>Voici à quoi devrait ressembler votre banque de données après l’étape
+de préparation :</p>
+<pre class="r"><code>df</code></pre>
+<pre><code>## # A tibble: 100 × 3
+##       id genre emotionPositive
+##    &lt;int&gt; &lt;fct&gt;           &lt;dbl&gt;
+##  1     1 Femme              27
+##  2     2 Femme              27
+##  3     3 Femme              20
+##  4     4 Femme              26
+##  5     5 Femme              23
+##  6     6 Femme              21
+##  7     7 Femme              24
+##  8     8 Femme              29
+##  9     9 Homme              27
+## 10    10 Femme              41
+## # … with 90 more rows</code></pre>
+<hr />
+</div>
+<div id="comparer-des-moyennes" class="section level1" number="1">
+<h1><span class="header-section-number">1</span> Comparer des
+moyennes</h1>
+<p>Cette section explique comment obtenir la moyenne et l’intervalle de
+confiance d’une variable continue pour plusieurs groupes (variable
+discrète). À titre d’exemple, nous utiliserons les émotions positives
+(<code>emotionPositive</code>) comme variable continue et le genre
+(<code>genre</code>) comme variable discrète.</p>
+<hr />
+<div id="scinder-le-output-par-groupe" class="section level2"
+number="1.1">
+<h2><span class="header-section-number">1.1</span> Scinder le output par
+groupe</h2>
+<p>Nous avons déjà vue dans la section 2.2.1 du guide <a
+href="preparer_les_donnees.html">Préparer des données</a> qu’il est
+possible d’obtenir les statistiques descriptives (dont la moyenne) d’une
+variable continue à partir à partir des fonctions mathématiques
+(<code>mean()</code>, <code>sd()</code>, etc.) du package R de base
+(voir section 2.2.1). Toutefois, la syntaxe présentée précédemment ne
+permettait pas à elle seule d’obtenir les statistiques descriptives
+<em>relatives à différents groupes</em>. Le package <code>dplyr</code>
+offre plusieurs fonctions utiles pour travailler avec des données
+groupées.</p>
+<p>Le package <code>dplyr</code> inclue également l’opérateur
+<code>%&gt;%</code> (<em>pipe operator</em> en anglais), qui permet de
+chaîner plusieurs fonctions ensemble, en utilisant la sortie d’une
+fonction comme entrée de la fonction suivante, ce qui rend le code plus
+facile à lire et à comprendre. Pour ne pas avoir à ré-écrire ou
+copier-coller <code>%&gt;%</code> à chaque fois, vous pouvez simplement
+utiliser les raccourcis suivant :</p>
+<p><strong>Pour Mac</strong> = Cmd (<code>⌘</code>) + Shift
+(<code>⇧</code>) + M<br />
+<strong>Pour Windows</strong> = Ctrl (<code>⌃</code>) + Shift
+(<code>⇧</code>) + M</p>
+<p><em>Note</em> : Si ces raccourcis ne fonctionnent pas pour vous, vous
+pouvez toujours consulter vos raccourcis dans les réglages. Voici
+comment y accéder :<br />
+<code>Preferences</code> &gt; <code>Code</code> &gt;
+<code>Editing</code> &gt; <code>Modify Keyboard Shortcuts...</code></p>
+<p>Voici donc comment obtenir les moyennes de la variable
+<code>emotionPositive</code> pour chaque groupe de la variable
+catégorielle <code>genre</code> (deux variables situées dans la banque
+de données <code>df</code>) :</p>
+<pre class="r"><code>library(dplyr)
+df %&gt;%
+    group_by(genre) %&gt;% 
+    summarise(Moyenne = mean(emotionPositive, na.rm = TRUE))</code></pre>
+<pre><code>## # A tibble: 2 × 2
+##   genre Moyenne
+##   &lt;fct&gt;   &lt;dbl&gt;
+## 1 Homme    28.4
+## 2 Femme    27.1</code></pre>
+<hr />
+</div>
+<div id="intervalle-de-confiance" class="section level2" number="1.2">
+<h2><span class="header-section-number">1.2</span> Intervalle de
+confiance</h2>
+<p>La package R de base ne contient pas de fonction spécifique pour
+calculer les limites de l’intervalle de confiance d’une moyenne.
+Évidemment, il est possible de calculer ces limites « à la main » (voir
+la section suivante). Cependant, la syntaxe nécessaire pour y arriver
+est trop complexe pour les besoins de ce cours. Je vous conseil donc
+d’utiliser la fonction <code>smean_cl_normal()</code> du package
+<code>Hmisc</code>. Voici comment ajouter les limites supérieures et
+inférieures de l’intervalle de confiance de la moyenne au tableau de
+l’exemple précédent :</p>
+<pre class="r"><code>library(dplyr)
+library(Hmisc)
+df %&gt;%
+    group_by(genre) %&gt;% 
+    summarise(Moyenne = mean(emotionPositive, na.rm = TRUE),
+              limite_inf = smean.cl.normal(emotionPositive)[&quot;Lower&quot;],
+              limite_sup = smean.cl.normal(emotionPositive)[&quot;Upper&quot;])</code></pre>
+<pre><code>## # A tibble: 2 × 4
+##   genre Moyenne limite_inf limite_sup
+##   &lt;fct&gt;   &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;
+## 1 Homme    28.4       25.1       31.6
+## 2 Femme    27.1       25.5       28.7</code></pre>
+<hr />
+<div
+id="détails-supplémentaires-intervalle-de-confiance-et-hypothèse-nulle"
+class="section level3" number="1.2.1">
+<h3><span class="header-section-number">1.2.1</span> Détails
+supplémentaires : Intervalle de confiance et hypothèse nulle</h3>
+<p>Si vous essayez de calculer à la main l’intervalle de confiance à
+partir de la formule présentée dans le manuel (<a
+href="https://canadacommons.ca/artifacts/1882749/statistiques/2631904/view/">Haccoun
+et Cousineau, 2010</a>, formule 9.5, p. 271), vous arriverez peut-être à
+des résultats différents de ceux obtenus à l’aide de la fonctions
+<code>smean_cl_normal()</code>. Cette différence s’explique par le fait
+que cette fonction calcule l’intervalle de confiance à partir de
+l’erreur-type de chaque groupe pris individuellement (plutôt que
+d’utiliser l’erreur-type de l’échantillon complet). Dans un contexte
+d’inférence statistique (ex.: test-t), il est plus cohérent d’estimer
+l’erreur-type de la moyenne à partir de l’échantillon complet puisqu’on
+cherche à représenter l’hypothèse nulle. Cependant, obtenir un
+intervalle calculé de cette manière nécessite de coder manuellement la
+formule dans R, ce qui résulte en une syntaxe beaucoup trop complexe
+pour ce cours. Pour ceux que ça intéresse, la voici :</p>
+<pre class="r"><code>library(dplyr)
+library(tidyr)
+
+# Cacluler l&#39;erreur-type de la moyenne (s_M)
+s &lt;- df %&gt;% 
+        drop_na(emotionPositive) %&gt;% 
+        pull(emotionPositive) %&gt;% 
+        sd()
+N &lt;- df %&gt;% 
+        drop_na(emotionPositive) %&gt;% 
+        pull(emotionPositive) %&gt;% 
+        length()
+s_M &lt;- s / sqrt(N)
+
+# Calculer le score t limite
+conf.int &lt;- 0.95
+degrees_of_freedom &lt;- N - 2 # Deux groupes
+t &lt;- qt((1 + conf.int)/2, df = degrees_of_freedom)
+
+# Calculer les limites de l&#39;IC et présenter dans un tableau
+options(pillar.sigfig = 4)
+df %&gt;%
+  drop_na(emotionPositive) %&gt;% 
+  group_by(genre) %&gt;% 
+  summarise(Moyenne = mean(emotionPositive),
+            limite_inf = mean(emotionPositive) - t * s_M,
+            limite_sup = mean(emotionPositive) + t * s_M)</code></pre>
+<pre><code>## # A tibble: 2 × 4
+##   genre Moyenne limite_inf limite_sup
+##   &lt;fct&gt;   &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;
+## 1 Homme   28.37      26.95      29.79
+## 2 Femme   27.10      25.68      28.51</code></pre>
+<p>Dans le cadre de votre TP, vous pourrez présenter l’intervalle de
+confiance obtenus à partir de la fonction
+<code>smean_cl_normal()</code>.</p>
+</div>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

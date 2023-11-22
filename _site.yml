@@ -6,25 +6,25 @@ navbar:
   - text: "Tutoriels R"
     menu:
       - text: "Rédiger un script RMarkdown"
-        href: content/script_rmarkdown.html
+        href: script_rmarkdown.html
       - text: "Installer et activer des packages"
-        href: content/packages.html
+        href: packages.html
       - text: "Importer les données"
-        href: content/importer_les_donnees.html
+        href: importer_les_donnees.html
       - text: "Préparer les données"
-        href: content/preparer_les_donnees.html
+        href: preparer_les_donnees.html
       - text: "Visualiser les données"
-        href: content/visualiser_les_donnees.html
+        href: visualiser_les_donnees.html
       - text: "Comparer des moyennes"
-        href: content/comparaison_de_moyennes.html
+        href: comparaison_de_moyennes.html
       - text: "Corrélation de Pearson et de Spearman"
-        href: content/Correlation.html
+        href: Correlation.html
       - text: "Test-t et test U Mann-Whitney"
-        href: content/test-t.html
+        href: test-t.html
       - text: "ANOVA et test de Kruskal-Wallis"
-        href: content/ANOVA.html
+        href: ANOVA.html
       - text: "Chi-carré et méthode exact de Fisher"
-        href: content/Chi-carré.html
+        href: Chi-carré.html
 output: 
   html_document:
     theme: yeti

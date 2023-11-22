@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Xavier La Rochelle" />
+
+<meta name="date" content="2023-11-22" />
+
+<title>Anatomie d’un script RMarkdown</title>
+
+<script src="site_libs/header-attrs-2.20/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/yeti.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">À propos</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="content.html">Projets</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Tutoriels R
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="script_rmarkdown.html">Rédiger un script RMarkdown</a>
+    </li>
+    <li>
+      <a href="packages.html">Installer et activer des packages</a>
+    </li>
+    <li>
+      <a href="importer_les_donnees.html">Importer les données</a>
+    </li>
+    <li>
+      <a href="preparer_les_donnees.html">Préparer les données</a>
+    </li>
+    <li>
+      <a href="visualiser_les_donnees.html">Visualiser les données</a>
+    </li>
+    <li>
+      <a href="comparaison_de_moyennes.html">Comparer des moyennes</a>
+    </li>
+    <li>
+      <a href="Correlation.html">Corrélation de Pearson et de Spearman</a>
+    </li>
+    <li>
+      <a href="test-t.html">Test-t et test U Mann-Whitney</a>
+    </li>
+    <li>
+      <a href="ANOVA.html">ANOVA et test de Kruskal-Wallis</a>
+    </li>
+    <li>
+      <a href="Chi-carré.html">Chi-carré et méthode exact de Fisher</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Anatomie d’un script RMarkdown</h1>
+<h4 class="author">Xavier La Rochelle</h4>
+<h4 class="date">2023-11-22</h4>
+
+</div>
+
+
+<hr />
+<p><strong>Avant-propos : comment utiliser ce guide?</strong></p>
+<p>Le format de fichier RMarkdown est extrêmement flexible et, pour s’y
+retrouver, il faut savoir distinguer ses sous-composantes. Un script
+RMarkdown peut-être subdivisé en trois types de contenus:
+l’<strong>entête YAML</strong> (section 1), le <strong>texte</strong>
+(section 2) et les <strong>blocs</strong> (ou <code>chunks</code>)
+<strong>de code</strong> (section 3).</p>
+<p>L’objectif de ce guide est de répertorier toutes les informations
+dont vous <em>pourriez</em> avoir besoin pour rédiger un script
+RMarkdown. Ainsi, vous n’aurez pas nécessairement besoin d’utiliser
+<em>toutes</em> les petites astuces qui s’y trouvent. Il existe bien
+entendu des guides plus exhaustifs pour apprendre à utiliser RMarkdown
+(ex.: <a href="https://bookdown.org/yihui/rmarkdown/">R Markdown: The
+Definitive Guide</a> ou <a
+href="https://bookdown.org/yihui/rmarkdown-cookbook/">R Markdown
+Cookbook</a>) mais je tenais à regrouper et vulgariser un sous-ensemble
+d’éléments que je considère plus essentiels.</p>
+<p>Pour parvenir à rédiger vous-même un script RMarkdown, je vous
+conseil de lire attentivement les sections principales (1, 2 et 3) de ce
+guide ainsi que la section 3.1. Vous pouvez vous permettre de lire un
+peu moins attentivement les sous-sections 1.1 à 1.3 et 2.1 à 2.5.</p>
+<hr />
+<div id="entête-yaml" class="section level1" number="1">
+<h1><span class="header-section-number">1</span> Entête YAML</h1>
+<p>L’entête YAML réfère à la section de code située au tout début de
+votre script entourée par 3 tirets (<code>---</code>). Cette entête
+contient des métadonnées facultatives permettant de modifier l’affichage
+de votre document final (c.-à-d. le « output » de votre script). Par
+exemple, l’entête YAML permet de spécifier le type de fichier pour le
+output, le titre de votre document, l’inclusion d’une table des
+matières, etc..</p>
+<p>Voici à quoi pourrait ressembler l’entête YAML d’un script RMarkdown
+destiné à créer un fichier html (comme celui que vous lisez en ce
+moment).</p>
+<pre class="yaml"><code>---
+output: html_document
+title: &quot;Titre_de_votre_script&quot;
+author: &quot;Votre_nom&quot;
+date: &quot;la_date&quot;
+---</code></pre>
+<p>Cette entête se lie assez intuitivement. Elle spécifie tout d’abord
+le format du <em>output</em> (un fichier <code>html</code> dans ce
+cas-ci), le titre, le nom de l’auteur.e et finalement la date de
+création du document. L’ordre des arguments n’a pas d’importance si
+ceux-ci ne sont pas définie de façon hiérarchique (voir prochaine
+section).</p>
+<p>Il est possible de modifier l’entête YAML pour bonifier le document
+final. À titre d’exemple, voici trois éléments pouvant être incorporés à
+un document html par l’intermédiaire de l’entête YAML</p>
+<hr />
+<div id="table-des-matières" class="section level2" number="1.1">
+<h2><span class="header-section-number">1.1</span> Table des
+matières</h2>
+<p>Voici comment inclure une table des matières et spécifier
+(optionnellement) des sous-options de la TDM :</p>
+<ol style="list-style-type: decimal">
+<li>Inclure une table des matières, utiliser l’option
+<code>toc</code><br />
+</li>
+<li><code>toc_depth</code> pour spécifier le nombre de sous-niveaux
+affichés dans la TDM (3 par défaut)<br />
+</li>
+<li><code>toc_float</code> pour que la TDM soit toujours visible dans la
+marge gauche<br />
+</li>
+<li><code>collapsed</code> (<code>TRUE</code> par défaut) pour
+déterminer si la table est étendue ou compacte par défaut (seulement
+titres visibles)<br />
+</li>
+<li><code>smooth_scroll</code> (<code>TRUE</code> par défaut) détermine
+si la TDM défile en même temps que le défilement de la page</li>
+</ol>
+<pre class="yaml"><code>---
+output: 
+  html_document:
+    toc: true
+    toc_depth: 2
+    toc_float: true
+    collapsed: false
+    smooth_scroll: false
+title: &quot;Titre_de_votre_script&quot;
+author: &quot;Votre_nom&quot;
+date: &quot;la_date&quot;
+---</code></pre>
+<hr />
+</div>
+<div id="titres-numérotés" class="section level2" number="1.2">
+<h2><span class="header-section-number">1.2</span> Titres numérotés</h2>
+<p>L’option <code>number_section</code> permet de numéroter les titres
+de votre script.</p>
+<pre class="yaml"><code>---
+output: 
+  html_document:
+    number_sections: true
+title: &quot;Titre_de_votre_script&quot;
+author: &quot;Votre_nom&quot;
+date: &quot;la_date&quot;
+---</code></pre>
+<hr />
+</div>
+<div id="affichage-des-tableaux" class="section level2" number="1.3">
+<h2><span class="header-section-number">1.3</span> Affichage des
+tableaux</h2>
+<p>Il est possible d’ajouter le paramètre d’affichage
+<code>df_print: paged</code> à l’entête YAML pour modifier l’affichage
+des tableaux et rendre le document final plus agréable à regarder. Voici
+comment faire :</p>
+<pre class="yaml"><code>---
+output: 
+  html_document:
+    df_print: paged
+title: &quot;Titre_de_votre_script&quot;
+author: &quot;Votre_nom&quot;
+date: &quot;la_date&quot;
+---</code></pre>
+<hr />
+</div>
+</div>
+<div id="texte" class="section level1" number="2">
+<h1><span class="header-section-number">2</span> Texte</h1>
+<p>Le texte écrit dans un fichier RMarkdown — c.-à-d. tout ce qui ne
+fait pas partie d’un bloc de code ou de l’entête YAML — est formaté en
+<code>markdown</code>. Cela signifie que vous pouvez utiliser certaines
+astuces pour modifier l’affichage de votre texte dans le document final.
+Voici quelques exemples :</p>
+<hr />
+<div id="sauts-de-ligne" class="section level2" number="2.1">
+<h2><span class="header-section-number">2.1</span> Sauts de ligne</h2>
+<p>Dans votre document final, les sauts de lignes et de paragraphe ne
+reflèteront pas toujours exactement ceux que vous voyez dans votre
+script. L’opérateur <code>\</code> vous permet d’indiquer explicitement
+un saut de ligne. Vous pouvez également indiquer un changement de
+paragraphe en ajoutant deux espaces (<code></code>) à la fin de celui-ci
+ou en laissant une ligne vide dans votre script.</p>
+<p><em>Note: il est difficile de fournir un exemple de cette
+fonctionnalité.</em></p>
+<hr />
+</div>
+<div id="titres" class="section level2" number="2.2">
+<h2><span class="header-section-number">2.2</span> Titres
+(<code>#</code>)</h2>
+<p>Les titres sont créés avec le symbole <code>#</code>. Le nombre de
+<code>#</code> détermine le « niveau hiérarchique » de votre titre. Les
+titres apparaîtrons automatiquement dans votre table des matières (si
+vous avez activé cette option).</p>
+<p><strong>Code :</strong></p>
+<pre class="rmd"><code>### Exemple de sous-titre de niveau 3
+
+#### Exemple de sous-titre de niveau 4
+</code></pre>
+<p><strong>Résultat :</strong></p>
+<div id="exemple-de-sous-titre-de-niveau-3" class="section level3"
+number="2.2.1">
+<h3><span class="header-section-number">2.2.1</span> Exemple de
+sous-titre de niveau 3</h3>
+<div id="exemple-de-sous-titre-de-niveau-4" class="section level4"
+number="2.2.1.1">
+<h4><span class="header-section-number">2.2.1.1</span> Exemple de
+sous-titre de niveau 4</h4>
+<hr />
+</div>
+</div>
+</div>
+<div id="affichage-du-texte" class="section level2" number="2.3">
+<h2><span class="header-section-number">2.3</span> Affichage du
+texte</h2>
+<p>Le format <code>markdown</code> vous permet de modifier l’affichage
+du texte en entourant les passages que vous souhaitez modifier avec
+certains symboles. Voici quelques exemples :</p>
+<p><code>Texte</code> = Texte (aucune modification)<br />
+<code>*Texte*</code> = <em>Texte</em> (italique)<br />
+<code>**Texte**</code> = <strong>Texte</strong> (gras)<br />
+<code>***Texte***</code> = <strong><em>Texte</em></strong> (italique +
+gras)<br />
+<code>`Texte`</code> = <code>Texte</code> (code en verbatim)<br />
+<code>~~Texte~~</code> = <del>Texte</del> (barré)</p>
+<hr />
+</div>
+<div id="créer-des-listes--" class="section level2" number="2.4">
+<h2><span class="header-section-number">2.4</span> Créer des listes
+(<code>-</code>)</h2>
+<p>Les tirets (<code>-</code>) ou les chiffres suivies d’un point (ex.:
+<code>1.</code>, <code>2.</code>, etc.) permettent de créer des
+listes.</p>
+<p><strong>Code :</strong></p>
+<pre class="rmd"><code>Voici une liste non-ordonnée :
+
+- Banane
+- Poire
+
+Voici une liste ordonnée :
+
+1. Banane
+2. Poire</code></pre>
+<p><strong>Résultat :</strong><br />
+Voici une liste non-ordonnée :</p>
+<ul>
+<li>Banane</li>
+<li>Poire</li>
+</ul>
+<p>Voici une liste ordonnée :</p>
+<ol style="list-style-type: decimal">
+<li>Banane</li>
+<li>Poire</li>
+</ol>
+<hr />
+</div>
+<div id="ligne-de-séparation" class="section level2" number="2.5">
+<h2><span class="header-section-number">2.5</span> Ligne de
+séparation</h2>
+<p>Mettre trois tirets (<code>---</code>) tout seul permet d’insérer une
+ligne horizontale qui accentue la séparation entre différentes sections
+de votre document. Il peut être pratique de mettre une ligne de
+séparation directement avant un <code>#Titre</code>.</p>
+<p><strong>Code :</strong></p>
+<pre class="rmd"><code>Paragraphe 1
+
+Paragraphe 2
+
+---
+
+Paragraphe 3</code></pre>
+<p><strong>Résultat :</strong></p>
+<p>Paragraphe 1</p>
+<p>Paragraphe 2</p>
+<hr />
+<p>Paragraphe 3</p>
+<hr />
+</div>
+</div>
+<div id="blocs-de-code-chunks" class="section level1" number="3">
+<h1><span class="header-section-number">3</span> Blocs de code
+(<code>chunks</code>)</h1>
+<p>Les blocs de code serve à incorporer de la syntaxe dans votre fichier
+RMarkdown. Les blocs de code sont séparé du texte à l’aide de trois
+accents graves (<code>```</code>) (de façon similaire aux trois tirets
+<code>---</code> de l’entête YAML). Les blocs de code ont la
+particularité de pouvoir être dans n’importe quel langage de
+programmation. C’est pourquoi il est nécessaire de spécifier quel
+langage on utilise avec des accolades <code>{r}</code>.</p>
+<p>Voici à quoi un bloc de code <code>R</code> vide devrait ressembler
+dans votre fichier RMarkdown :</p>
+<pre class="rmd"><code>```{r}
+```</code></pre>
+<p>Pour ne pas avoir à ré-écrire ou copier-coller tout ça à chaque fois
+que vous voulez créer un bloc de code, vous pouvez simplement utiliser
+les raccourcis suivant :<br />
+<strong>Pour Windows</strong> = Alt (<code>⎇</code>) + Commande
+(<code>⊞</code>) + i<br />
+<strong>Pour Mac</strong> = Option (<code>⌥</code>) + Commande
+(<code>⌘</code>) + i</p>
+<p><em>Note : Si ces raccourcis ne fonctionnent pas pour vous, vous
+pouvez toujours consulter vos raccourcis dans les réglages. Voici
+comment y accéder :</em><br />
+<code>Preferences</code> &gt; <code>Code</code> &gt;
+<code>Editing</code> &gt; <code>Modify Keyboard Shortcuts...</code></p>
+<hr />
+<div id="options-globales" class="section level2" number="3.1">
+<h2><span class="header-section-number">3.1</span> Options globales</h2>
+<p>Il est souvent utile d’inclure un bloc de code au tout début de votre
+script (juste après l’entête YAML) pour spécifier certaines commandes R
+nécessaires au bon fonctionnement de votre document final. Généralement,
+on ajoute l’argument <code>include=FALSE</code> aux paramètres de ce
+bloc de code afin que celui-ci ne s’affiche pas dans le document final.
+Voici quatre éléments qu’il est pratique d’incorporer à votre bloc de
+code <code>setup</code> :</p>
+<ul>
+<li>Packages à activer<br />
+</li>
+<li>Option d’affichage des blocs de code (inclu par défaut)<br />
+</li>
+<li>Importer la base de données brutes<br />
+</li>
+<li>Préparer la base de données <em>clean</em></li>
+</ul>
+<p>Je vous recommande structurer vos blocs de code <code>setup</code> de
+la façon suivante :</p>
+<pre class="rmd"><code>```{r setup, include=FALSE}
+# Activation des packages :
+library(knitr)
+library(readr)
+library(tibble)
+
+# Affichage des blocs de code dans le document final : 
+opts_chunk$set(echo = TRUE)
+
+# Importer les données :
+donnees_brutes &lt;- read_csv(&quot;folder path&quot;)
+
+# Préparer les données :
+df &lt;- as_tibble(data.frame(id = nrow(donnees_brutes)))
+```</code></pre>
+<p><em>Note: les détails relatifs à cette syntaxe seront expliquer dans
+les documents</em> <code>importer_les_donnees.html</code> <em>et</em>
+<code>preparer_les_donnees.html</code> <em>sur Studium</em>.</p>
+<hr />
+</div>
+</div>
+<div id="ressources-supplémentaires" class="section level1" number="4">
+<h1><span class="header-section-number">4</span> Ressources
+supplémentaires</h1>
+<ul>
+<li><a href="https://bookdown.org/yihui/rmarkdown/">R Markdown: The
+Definitive Guide</a>, 2022-04-11, Yihui Xie, J. J. Allaire, Garrett
+Grolemund<br />
+</li>
+<li><a href="https://bookdown.org/yihui/rmarkdown-cookbook/">R Markdown
+Cookbook</a>, 2022-11-07, Yihui Xie, Christophe Dervieux, Emily
+Riederer<br />
+</li>
+<li><a
+href="https://crlnp.github.io/intro-rmarkdown/options.html">Rmarkdown -
+Paramétrages utiles</a>, 2020-11-11, Caroline Patenaude<br />
+</li>
+<li><a href="https://rmarkdown.rstudio.com/lesson-15.HTML">RMarkdown
+Cheat-sheet</a></li>
+</ul>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

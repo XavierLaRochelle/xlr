@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Xavier La Rochelle" />
+
+<meta name="date" content="2023-11-22" />
+
+<title>Test-t</title>
+
+<script src="site_libs/header-attrs-2.20/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/yeti.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">À propos</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="content.html">Projets</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Tutoriels R
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="script_rmarkdown.html">Rédiger un script RMarkdown</a>
+    </li>
+    <li>
+      <a href="packages.html">Installer et activer des packages</a>
+    </li>
+    <li>
+      <a href="importer_les_donnees.html">Importer les données</a>
+    </li>
+    <li>
+      <a href="preparer_les_donnees.html">Préparer les données</a>
+    </li>
+    <li>
+      <a href="visualiser_les_donnees.html">Visualiser les données</a>
+    </li>
+    <li>
+      <a href="comparaison_de_moyennes.html">Comparer des moyennes</a>
+    </li>
+    <li>
+      <a href="Correlation.html">Corrélation de Pearson et de Spearman</a>
+    </li>
+    <li>
+      <a href="test-t.html">Test-t et test U Mann-Whitney</a>
+    </li>
+    <li>
+      <a href="ANOVA.html">ANOVA et test de Kruskal-Wallis</a>
+    </li>
+    <li>
+      <a href="Chi-carré.html">Chi-carré et méthode exact de Fisher</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Test-t</h1>
+<h4 class="author">Xavier La Rochelle</h4>
+<h4 class="date">2023-11-22</h4>
+
+</div>
+
+
+<hr />
+<p><strong><em>Important :</em></strong> Ce guide assume que vous savez
+comment :</p>
+<ol style="list-style-type: decimal">
+<li><a href="script_rmarkdown.html">Rédiger un script
+RMarkdown</a><br />
+</li>
+<li><a href="packages.html">Installer et activer des packages</a><br />
+</li>
+<li><a href="importer_les_donnees.html">Importer une base de
+données</a></li>
+<li><a href="preparer_les_donnees.html">Préparer des données</a></li>
+</ol>
+<p>Vous pouvez cliquer sur les liens ci-dessus pour consulter les guides
+associées.</p>
+<hr />
+<div id="importer-et-préparer-les-données" class="section level2"
+number="0.1">
+<h2><span class="header-section-number">0.1</span> Importer et préparer
+les données</h2>
+<p>Dans ce guide, nous utiliserons deux variables du fichier
+<code>data_visualisation.csv</code>, soit le Genre (<code>genre</code>)
+et les émotions positives avant (<code>emotionPositive_Pre</code>) et
+après (<code>emotionPositive_Post</code>) une intervention
+psychosociale. Pour vous évitez de tout re-coder, j’ai pris le temps
+d’écrire la syntaxe nécessaire pour importer et préparer les données
+:</p>
+<pre class="r"><code># Packages
+library(readr)
+library(tibble)
+
+# Importer les données (data_visualisation.csv)
+donnees_brutes &lt;- read_csv(&quot;folder path&quot;)  
+
+# Préparer les données 
+df &lt;- tibble(id = 1:nrow(donnees_brutes))
+df$intervention &lt;- factor(donnees_brutes$Intervention,
+                          levels = c(1,2),
+                          labels = c(&quot;BPS&quot;,
+                                     &quot;Contrôle&quot;))
+df$genre &lt;- factor(donnees_brutes$Genre,
+                   levels = c(1,2),
+                   labels = c(&quot;Homme&quot;,
+                              &quot;Femme&quot;))
+df$emotionPositive_Pre &lt;- donnees_brutes$PANAS_Pos_Pre
+df$emotionPositive_Post &lt;- donnees_brutes$PANAS_Pos_Post</code></pre>
+<p>Pour suivre les exemples dans ce guide, vous devrez donc :<br />
+1. avoir téléchargé le fichier <code>data_visualisation.csv</code> sur
+Studium<br />
+2. noter le <code>"folder path"</code><br />
+3. exécuter la syntaxe ci-dessus (en changeant le
+<code>"folder path"</code>).</p>
+<p>Voici à quoi devrait ressembler votre banque de données après l’étape
+de préparation :</p>
+<pre class="r"><code>df</code></pre>
+<pre><code>## # A tibble: 100 × 5
+##       id intervention genre emotionPositive_Pre emotionPositive_Post
+##    &lt;int&gt; &lt;fct&gt;        &lt;fct&gt;               &lt;dbl&gt;                &lt;dbl&gt;
+##  1     1 BPS          Femme                  27                24   
+##  2     2 Contrôle     Femme                  27                33   
+##  3     3 BPS          Femme                  20                20   
+##  4     4 Contrôle     Femme                  26                20   
+##  5     5 BPS          Femme                  23                14   
+##  6     6 Contrôle     Femme                  21                32   
+##  7     7 BPS          Femme                  24                29   
+##  8     8 BPS          Femme                  29                28.03
+##  9     9 BPS          Homme                  27                35   
+## 10    10 Contrôle     Femme                  41                23   
+## # … with 90 more rows</code></pre>
+<hr />
+</div>
+<div id="test-t" class="section level1" number="1">
+<h1><span class="header-section-number">1</span> Test-t</h1>
+<p>Ce guide présente les étapes pour conduire trois types de test-t,
+soit le test-t à un échantillon, le test-t à deux échantillons
+indépendants et le test-t à deux échantillons dépendants (ou
+jumelés).</p>
+<hr />
+<div id="postulat-de-normalité" class="section level2" number="1.1">
+<h2><span class="header-section-number">1.1</span> Postulat de
+normalité</h2>
+<p>Avant de présenter comment effectuer ces différents tests dans R,
+nous aborderons la vérification du postulat de normalité. En effet,
+toutes les formes du test-t postulent la normalité de l’échantillon (ou
+des échantillons) utilisé(s). De plus, contrairement aux postulats de
+continuité et d’indépendance des scores (uniques ou jumelés), le
+postulat de normalité est le seul qui nécessite l’utilisation de R.</p>
+<p>Plusieurs méthode existent pour vérifier la normalité. Nous en
+verrons trois :</p>
+<ol style="list-style-type: decimal">
+<li>Le test Shapiro-Wilk<br />
+</li>
+<li>Le QQplot<br />
+</li>
+<li>Les indices d’asymétrie et d’aplatissement</li>
+</ol>
+<p><strong><em>À noter pour le TP :</em></strong><br />
+Même si les trois méthode sont présenté dans ce guide, vous aurez
+uniquement besoin d’utiliser le test Shapiro-Wilk et le QQplot pour
+votre TP.</p>
+<hr />
+<div id="test-de-shapiro-wilk" class="section level3" number="1.1.1">
+<h3><span class="header-section-number">1.1.1</span> Test de
+Shapiro-Wilk</h3>
+<p>Le test de Shapiro-Wilk est un test statistique utilisé pour
+déterminer si un échantillon de données suit ou non une distribution
+normale. Il est basé sur la comparaison entre les valeurs observées dans
+l’échantillon et les valeurs attendues d’une distribution normale. Si
+les valeurs observées sont proches des valeurs attendues, alors
+l’échantillon peut être considéré comme ayant une distribution
+normale.</p>
+<p>Il importe de noter que le test de Shapiro-Wilk n’est généralement
+pas utilisé dans les grands échantillons car il est très sensible à la
+taille d’échantillon. Autrement dit, le test de Shapiro-Wilk est presque
+toujours significatif (et donc peu fiable) lorsque la taille
+d’échantillon est élevée. Pour cette raison, la fonction présentée
+ci-dessous <code>shapiro.test()</code> retourne un message d’erreur si
+la taille d’échantillon est supérieur à 5000.</p>
+<p>Le test de Shapiro-Wilk fournit une statistique W et une valeur de p
+associée. Si la valeur de p est inférieure à un seuil de signification
+donné, généralement 0,05, alors l’hypothèse nulle selon laquelle
+l’échantillon suit une distribution normale est rejetée. Si la valeur de
+p est supérieure au seuil de signification, alors l’hypothèse nulle
+n’est pas rejetée, ce qui signifie que l’échantillon peut être considéré
+comme ayant une distribution normale.</p>
+<p>Voici la syntaxe :</p>
+<pre class="r"><code>shapiro.test(df$emotionPositive_Pre)</code></pre>
+<pre><code>## 
+##  Shapiro-Wilk normality test
+## 
+## data:  df$emotionPositive_Pre
+## W = 0.98799, p-value = 0.5078</code></pre>
+<p>On observe que le test de Shapiro-Wilk n’est pas significatif pour
+notre échantillon (<span class="math inline">\(W ≈ ,99; p &gt;
+,05\)</span>), indiquant ainsi que l’échantillon ne diffère pas
+significativement de la normalité.</p>
+<hr />
+</div>
+<div id="qqplot" class="section level3" number="1.1.2">
+<h3><span class="header-section-number">1.1.2</span> QQplot</h3>
+<p>Le test QQplot, abréviation de Quantile-Quantile plot, est une
+méthode graphique pour évaluer si un échantillon de données suit une
+distribution donnée, comme une distribution normale.</p>
+<p>Le test QQplot trace les quantiles des données observées sur l’axe
+des x et les quantiles correspondants de la distribution théorique sur
+l’axe des y. Si les données observées suivent exactement la distribution
+théorique, alors les points sur le graphique seront alignés le long
+d’une ligne droite diagonale. Si les points s’éloignent de cette ligne
+diagonale, cela suggère que les données observées ne suivent pas
+exactement la distribution théorique. Si les points du graphique
+s’alignent approximativement le long de la ligne diagonale, cela suggère
+que les données sont normalement distribuées.</p>
+<p>Le test QQplot est utile car il permet de visualiser les différences
+entre les distributions théoriques et les données observées de manière
+intuitive et facilement compréhensible. Cependant, il ne fournit pas une
+mesure quantitative de la différence entre les distributions. Voici
+comment obtenir un QQplot dans R :</p>
+<pre class="r"><code>qqnorm(df$emotionPositive_Post)
+qqline(df$emotionPositive_Post)</code></pre>
+<p><img src="Test-t_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>Ici, on peut conclure que les observations semblent respecter une
+distribution normale puisqu’on observe une différence minime entre la
+position des points et la ligne représentant la distribution théorique.
+On pourrait noter une légère forme sinusoïdale aux extrémités de la
+distribution, mais rien de clairement anormale.</p>
+<p>Puisque le QQplot est une vérification pûrement visuelle de la
+normalité, il est pertinent de savoir à quoi pourrait ressembler un
+QQplot qui ne respecte pas la normalité. À titre de contre-exemple,
+voici le QQplot d’un échantillon provenant d’une distribution
+non-normale :</p>
+<pre class="r"><code>y &lt;- runif(100, min = 12, max = 42)</code></pre>
+<p>Les observations de la nouvelle variable créée (<code>y</code>) sont
+des observations aléatoires provennant d’une distribution uniforme
+(<code>runif()</code>), ce qui signifie que toutes les valeurs à
+l’intérieur de l’intervalle déclaré (<code>min = 12</code> et
+<code>max = 42</code>) sont également probables. On obtient une
+distribution qui ressemble à ceci :</p>
+<pre class="r"><code>ggplot(NULL, aes(y)) + 
+  geom_histogram(bins = 20) +
+  theme_classic()</code></pre>
+<p><img src="Test-t_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>On peut déjà constater visuellement que les observations ne semblent
+pas se distribué normalement autour de la moyenne. Ce type de
+distribution génère un QQplot qui ressemble à ceci :</p>
+<pre class="r"><code>qqnorm(y)
+qqline(y)</code></pre>
+<p><img src="Test-t_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p>L’anormalité de cet échantillon est particulièrement visible aux
+extrémités, où les quantiles observées (les points) diffèrent largement
+des quantiles théoriques (la ligne).</p>
+<p>Comme dernier exemple, simulons une variable (<code>y</code>)
+composée de deux autres variables (<code>a</code> et <code>b</code>)
+provenant de distributions normales dont la moyenne diffère (<span
+class="math inline">\(\mu_a = 20; \mu_b = 30\)</span>) :</p>
+<pre class="r"><code>a &lt;- rnorm(n = 50, mean = 20, sd = 3)
+b &lt;- rnorm(n = 50, mean = 30, sd = 3)
+y &lt;- c(a, b)</code></pre>
+<p>On pourrait donc dire que la variable <code>y</code> est en quelque
+sorte bimodale, ce qui se reflète dans l’histogramme ci-dessous :</p>
+<pre class="r"><code>ggplot(NULL, aes(y)) + 
+  geom_histogram(bins = 20) +
+  theme_classic()</code></pre>
+<p><img src="Test-t_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p>Le QQplot de ce type de distribution ressemble à ceci :</p>
+<pre class="r"><code>qqnorm(y)
+qqline(y)</code></pre>
+<p><img src="Test-t_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p>On constate que ce QQplot présente une forme sinusoïdale encore plus
+prononcée que celui de l’exemple précédent, différant visiblement des
+quantiles théoriques.</p>
+<hr />
+</div>
+<div id="indices-dasymétrie-de-dapplatissement" class="section level3"
+number="1.1.3">
+<h3><span class="header-section-number">1.1.3</span> Indices d’asymétrie
+de d’applatissement</h3>
+<p>La distribution normale (ou gaussienne) est caractérisée par une
+courbe en forme de cloche symétrique. Cela signifie que la moyenne, la
+médiane et le mode sont égaux et que la distribution est symétrique par
+rapport à la moyenne. Si une distribution n’est pas normale, elle peut
+être asymétrie, trop plate ou trop pointue.</p>
+<p>L’indice d’aplatissement (<em>kurtosis</em>) mesure à quel point une
+distribution est aplatie par rapport à une distribution normale. Plus
+précisément, il compare la hauteur et la largeur de la courbe de
+distribution. Un indice d’aplatissement égal à zéro indique une
+distribution normale, tandis qu’un indice supérieur à zéro indique une
+distribution plus aplatie (par exemple, une distribution leptokurtique)
+et un indice inférieur à zéro indique une distribution moins aplatie
+(par exemple, une distribution platykurique).</p>
+<p>L’indice d’asymétrie (<em>skewness</em>) mesure à quel point une
+distribution est biaisée par rapport à une distribution normale. Si une
+distribution est symétrique, l’indice d’asymétrie est égal à zéro. Si la
+distribution est décalée vers la droite (vers des valeurs plus élevées),
+l’indice d’asymétrie est positif. Si la distribution est décalée vers la
+gauche (vers des valeurs plus faibles), l’indice d’asymétrie est
+négatif.</p>
+<p>Lorsqu’on vérifie la normalité à l’aide de ces indices, on cherche
+généralement à ce qu’ils se trouvent à l’intérieur d’un intervalle de
+±1. Vous pouvez les obtenir à l’aide des fonctions <code>skew()</code>
+et <code>kurtosi()</code> du package <code>psych</code> :</p>
+<pre class="r"><code>library(psych)
+skew(df$emotionPositive_Post)</code></pre>
+<pre><code>## [1] -0.05360055</code></pre>
+<pre class="r"><code>kurtosi(df$emotionPositive_Post)</code></pre>
+<pre><code>## [1] -0.2324027</code></pre>
+<p>Dans ce cas-ci, on observe que l’échantillon présente une faible
+asymétrie négative (<span class="math inline">\(\text{Skew} ≈
+-0,05\)</span>) et une forme légèrement platykurtique (<span
+class="math inline">\(\text{Kurt} ≈ -0,23\)</span>). Toutefois, puisque
+ces indices demeurent à l’intérieur d’un intervalle de ±1, on peut
+conclure que notre échantillon respecte le postulat de normalité.</p>
+<hr />
+</div>
+</div>
+<div id="test-t-à-un-échantillon" class="section level2" number="1.2">
+<h2><span class="header-section-number">1.2</span> Test-t à un
+échantillon</h2>
+<p>Pour exemplifier le test-t à un échantillon, nous utiliserons la
+variable « émotions positives » mesurée après l’intervention
+psychosociale (<code>emotionPositives_Post</code>). Nous comparerons la
+moyenne de cette échantillon à une moyenne fictive représentant la
+population pour cette variable, qui sera de 30. Ainsi, le test
+d’hypothèse que nous posons est :<br />
+<span class="math display">\[
+H_0 : \mu = 30\\
+H_1 : \mu ≠ 30
+\]</span></p>
+<p>On peut se représenter visuellement cette hypothèse avec le graphique
+suivante :</p>
+<pre class="r"><code>library(ggplot2)
+ggplot(df, aes(x = emotionPositive_Post)) + 
+    geom_histogram(bins = 20) + 
+    geom_vline(xintercept = 30, lty = 2) + 
+    geom_vline(xintercept = mean(df$emotionPositive_Post), lty = 2, col = &quot;red&quot;) + 
+    labs(x = &quot;Émotion positives&quot;, y = &quot;Fréquence&quot;) + 
+    theme_classic()</code></pre>
+<p><img src="Test-t_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<p>Dans cet histogramme, la ligne pointillée noire représente la moyenne
+de la population (<span class="math inline">\(H_0\)</span>) et la rouge
+représente la moyenne observée de l’échantillon (<span
+class="math inline">\(H_1\)</span>). On observe bel et bien une
+différence entre ces moyennes mais il n’est pas évident de déterminer
+visuellement si cette différence est significative. Le test-t offre une
+manière systématique de répondre à cette question.</p>
+<hr />
+<div id="postulats" class="section level3" number="1.2.1">
+<h3><span class="header-section-number">1.2.1</span> Postulats</h3>
+<p>Le test-t à un échantillon comprend trois postulats :</p>
+<ol style="list-style-type: decimal">
+<li>La variable est continue : ☑<br />
+</li>
+<li>Les observations sont indépendantes : ☑</li>
+<li>La variable doit être normalement distribuée : à vérifier</li>
+</ol>
+<p>Pour les exemples, nous utiliserons le test de Shapiro-Wilk.</p>
+<pre class="r"><code>shapiro.test(df$emotionPositive_Post)</code></pre>
+<pre><code>## 
+##  Shapiro-Wilk normality test
+## 
+## data:  df$emotionPositive_Post
+## W = 0.98634, p-value = 0.3946</code></pre>
+<p>On observe que le test de Shapiro-Wilk n’est pas significatif pour
+notre échantillon (<span class="math inline">\(W ≈ ,99; p &gt;
+,05\)</span>), indiquant ainsi que l’échantillon ne diffère pas
+significativement de la normalité. Nous pouvons donc procédé avec le
+test-t.</p>
+<p>Voici le QQplot :</p>
+<pre class="r"><code>qqnorm(df$emotionPositive_Post)
+qqline(df$emotionPositive_Post)</code></pre>
+<p><img src="Test-t_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<hr />
+</div>
+<div id="faire-le-test" class="section level3" number="1.2.2">
+<h3><span class="header-section-number">1.2.2</span> Faire le test</h3>
+<p>Pour effectuer le test-t dans R, nous utiliserons la fonction
+<code>t.test()</code> du package <code>stats</code>.</p>
+<p>Le premier argument de la fonction <code>t.test()</code> est
+simplement la variable continue qui représente notre échantillon. Le
+deuxième argument désigne la valeur de la moyenne populationnelle. Comme
+mentionné précédemment, nous utilisons une moyenne populationnelle
+fictive de 30.</p>
+<p>Le dernier argument (<code>alternative =</code>) désigne la direction
+de notre hypothèse. Dans ce cas-ci, nous n’avions pas d’hypothèse quant
+à la différence entre la moyenne de notre échantillon et la moyenne
+populationnelle – nous souhaitons seulement savoir si elle en diffère
+(<span class="math inline">\(H_1 : \mu ≠ 30\)</span>). Nous spécifions
+donc une hypothèse bilatérale en indiquant <code>"two.sided"</code>. Cet
+argument pourrait techniquement être omis puisque la fonction
+<code>t.test()</code> effectue une hypothèse bidirectionnelle
+(<code>alternative = "two.sided"</code>) par défaut. Toutefois, il est
+bon de toujours s’assurer que l’anaylse effectuée reflète bien votre
+question de recherche. Par exemple, si nous avions posé l’hypothèse que
+le niveau d’émotions positives après l’intervention est supérieur à la
+moyenne populationnelle (<span class="math inline">\(H_1 : \mu &gt;
+30\)</span>), il aurait été important de modifier la valeur de
+l’argument <code>alternative</code> par <code>"greater"</code> au lieu
+de <code>"two.sided"</code>. Inversement, on assigne <code>"less"</code>
+pour indiquer l’hypothèse d’une moyenne inférieure à la moyenne
+populationnelle.</p>
+<p>Voici la syntaxe :</p>
+<pre class="r"><code>t.test(df$emotionPositive_Post,
+       mu = 30,
+       alternative = &quot;two.sided&quot;)</code></pre>
+<pre><code>## 
+##  One Sample t-test
+## 
+## data:  df$emotionPositive_Post
+## t = -3.1172, df = 99, p-value = 0.00239
+## alternative hypothesis: true mean is not equal to 30
+## 95 percent confidence interval:
+##  26.77650 29.28411
+## sample estimates:
+## mean of x 
+##   28.0303</code></pre>
+<p>Ce output nous indique que la moyenne de notre échantillon (<span
+class="math inline">\(M = 28,03\)</span>) est significativement
+inférieur à la moyenne de la population (<span
+class="math inline">\(t(99) ≈ -3,12; p &lt; ,05\)</span>).</p>
+<hr />
+</div>
+<div id="calculer-la-taille-deffet" class="section level3"
+number="1.2.3">
+<h3><span class="header-section-number">1.2.3</span> Calculer la taille
+d’effet</h3>
+<p>La fonction <code>t.test()</code> ne fournit malheureusement pas
+directement la taille d’effet (<em>d</em> de Cohen) de la différence
+observée. Cette fonction fournie toutefois l’indice <em>t</em> de
+Student, dont la valeur absolue peut être convertie en <em>D</em> de
+Cohen si on connait la taille de l’échantillon. Pour ce faire, nous
+utiliserons la fonction <code>t2d()</code> du package <code>psych</code>
+et la fonction <code>abs()</code> du package R de base :</p>
+<pre class="r"><code>library(psych)
+t2d(abs(-3.1172), n1 = 100)</code></pre>
+<pre><code>## [1] 0.31172</code></pre>
+<p>Voici les critères d’interprétation du D de Cohen :</p>
+<ul>
+<li>Effet minime: &lt; 0,20<br />
+</li>
+<li>Petit effet: 0,20-0,50<br />
+</li>
+<li>Effet moyen: 0,50-0,80<br />
+</li>
+<li>Grand effet: &gt; 0,80</li>
+</ul>
+<p>Nous pouvons donc conclure que la différence observée entre la
+moyenne de notre échantillon et celle de la population (<span
+class="math inline">\(d ≈ 0,31\)</span>) correspond à une petite taille
+d’effet.</p>
+<hr />
+</div>
+</div>
+<div id="test-t-à-deux-échantillons-jumelés" class="section level2"
+number="1.3">
+<h2><span class="header-section-number">1.3</span> Test-t à deux
+échantillons jumelés</h2>
+<p>Le test t apparié (ou “paired t-test” en anglais) est une méthode
+statistique qui permet de comparer les moyennes de deux échantillons
+appariés, c’est-à-dire deux groupes de données qui sont liés l’un à
+l’autre d’une manière ou d’une autre. Lorsqu’on utilise cette méthode,
+on calcule d’abord la différence entre les valeurs de chaque paire de
+données. Ensuite, on calcule la moyenne de ces différences et on la
+divise par l’écart-type des différences pour obtenir la statistique de
+test t. On utilise ensuite cette statistique pour déterminer si la
+différence entre les moyennes des deux échantillons est significative ou
+non.</p>
+<p>Pour cet exemple, nous utiliserons les différences d’émotions
+positives avant et après l’intervention, soit les variables
+<code>emotionPositive_Pre</code> et <code>emotionPositive_Post</code>
+respectivement dans notre banque de données. Ces variables nous donnent
+également l’occasion d’illustrer une hypothèse directionnelle, puisqu’il
+est logique de s’attendre à ce que l’intervention augmente les émotions
+positives. Ainsi, l’hypothèse que nous posons se traduit
+mathématiquement par la déclaration suivante :<br />
+<span class="math display">\[
+H_0 : \mu_{\Delta x}  = 0 \\
+H_1 : \mu_{\Delta x} &gt; 0\\
+\text{où}\; \Delta x = x_{\text{post}} - x_{\text{pré}}
+\]</span></p>
+<p>Puisqu’on s’attend à ce que le niveau d’émotions positives après
+l’intervention soit supérieur au niveau avant l’intervention, soustraire
+<span class="math inline">\(x_{\text{post}}\)</span> par <span
+class="math inline">\(x_{\text{pré}}\)</span> devrait résulter en une
+différence (<span class="math inline">\(\Delta x\)</span>)
+<strong>positive</strong>, d’où <span class="math inline">\(\mu_{\Delta
+x} &gt; 0\)</span>. Ainsi, l’ordre des groupes a beaucoup d’importance
+dans le contexte d’un test-t à échantillons jumelés.</p>
+<p>Voici un exemple de graphique qui illustre ce test d’hypothèses :</p>
+<pre class="r"><code>ggplot(df, aes(emotionPositive_Post - emotionPositive_Pre)) + 
+    geom_histogram(bins = 20) + 
+    geom_vline(xintercept = 0, lty = 2) + 
+    geom_vline(xintercept = mean(df$emotionPositive_Post - df$emotionPositive_Pre), col = &quot;red&quot;, lty = 2) + 
+    labs(x = &quot;Différence d&#39;émotions positives (post – pré)&quot;, y = &quot;Fréquence&quot;) + 
+    theme_classic()</code></pre>
+<p><img src="Test-t_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+<p>Cet histogramme est très similaire à celui présenté pour le test-t à
+un échantillon. La ligne pointillée noire représente une différence
+moyenne de 0 (<span class="math inline">\(H_0\)</span>) et la rouge
+représente la différence moyenne observée de l’échantillon (<span
+class="math inline">\(H_1\)</span>). Ainsi, on cherche à savoir si la
+différence moyenne d’émotions positives est significativement supérieure
+à 0.</p>
+<hr />
+<div id="postulats-1" class="section level3" number="1.3.1">
+<h3><span class="header-section-number">1.3.1</span> Postulats</h3>
+<p>Voici les postulats du test-t à échantillons jumelés :</p>
+<ol style="list-style-type: decimal">
+<li>La variable est continue : ☑<br />
+</li>
+<li>Les observations (différences de valeur) sont indépendantes : ☑</li>
+<li>Les différences de valeur doivent être à peu près normalement
+distribuées : à vérifier</li>
+</ol>
+<p>La seule différence avec le test-t à un échantillon est que le
+postulat de normalité et d’indépendance s’applique aux différences de
+valeurs et non aux valeurs en tant que tel. Ainsi, on peut vérifier la
+normalité des différences de valeurs avec la syntaxe suivante :</p>
+<pre class="r"><code>shapiro.test(df$emotionPositive_Post - df$emotionPositive_Pre)</code></pre>
+<pre><code>## 
+##  Shapiro-Wilk normality test
+## 
+## data:  df$emotionPositive_Post - df$emotionPositive_Pre
+## W = 0.9705, p-value = 0.02413</code></pre>
+<p>On obtient ici un résultat significatif au test de Shapiro-Wilk
+(<span class="math inline">\(W ≈ ,97; p &lt; ,05\)</span>), nous
+indiquant que l’échantillon ne respecte pas le postulat de
+normalité.</p>
+<p>Pour visualiser cette divergence de la normalité, on peut générer un
+QQplot des différences pré-post :</p>
+<pre class="r"><code>qqnorm(df$emotionPositive_Post - df$emotionPositive_Pre)
+qqline(df$emotionPositive_Post - df$emotionPositive_Pre)</code></pre>
+<p><img src="Test-t_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
+<p>On constate que l’anormalité de notre échantillon semble s’expliquer
+par les différences d’émotions positives négatives (donc les diminutions
+d’émotions positives pré-post).</p>
+<p>Habituellement, un test non-paramétrique serait plus approprié dans
+cette situation (voir section 2). Toutefois, pour les besoins de cet
+exemple, nous allons procéder avec le test-t quand même.</p>
+<hr />
+</div>
+<div id="faire-le-test-1" class="section level3" number="1.3.2">
+<h3><span class="header-section-number">1.3.2</span> Faire le test</h3>
+<p>Pour effectué un test-t à échantillon jumelé dans R, nous allons
+encore utiliser la fonction <code>t.test()</code>, mais cette fois en
+spécifiant les deux échantillons appariés ainsi que l’option
+<code>paired = TRUE</code>. Dans l’exemple que nous utilisons, nous
+spécifions également que nous posons l’hypothèse d’une différence
+supérieure à 0 (<code>alternative = "greater"</code>). Voici le code
+:</p>
+<pre class="r"><code>t.test(df$emotionPositive_Post,
+       df$emotionPositive_Pre,
+       paired = TRUE,
+       alternative = &quot;greater&quot;)</code></pre>
+<pre><code>## 
+##  Paired t-test
+## 
+## data:  df$emotionPositive_Post and df$emotionPositive_Pre
+## t = 1.0635, df = 99, p-value = 0.1451
+## alternative hypothesis: true mean difference is greater than 0
+## 95 percent confidence interval:
+##  -0.3313118        Inf
+## sample estimates:
+## mean difference 
+##        0.590303</code></pre>
+<p>Ce output nous indique que la différence moyenne d’émotions positives
+avant et après l’intervention ne diffère pas significativement de 0
+(<span class="math inline">\(t(99) ≈ 1,06; p &gt; ,05\)</span>).</p>
+<hr />
+</div>
+<div id="calculer-la-taille-deffet-1" class="section level3"
+number="1.3.3">
+<h3><span class="header-section-number">1.3.3</span> Calculer la taille
+d’effet</h3>
+<p>Encore une fois, la taille d’effet n’est pas interprétable puisque le
+test-t n’était pas significatif et, encore une fois, nous allons tout de
+même calculer la taille d’effet pour les besoin de l’exemple. Comme pour
+le test-t à un échantillon, nous avons simplement besoin du <em>t</em>
+observée (<span class="math inline">\(t(99) ≈ 1,06\)</span>) et de la
+taille d’échantillon (<span class="math inline">\(n = 100\)</span>).
+Voici la syntaxe :</p>
+<pre class="r"><code>library(psych)
+t2d(abs(1.06), n1 = 100)</code></pre>
+<pre><code>## [1] 0.106</code></pre>
+<p><em>Note</em>: la fonction <code>abs()</code> est inutile ici mais je
+la garde pour que vous puissiez copier-coller.</p>
+<p>Si la différence avait été significative, nous aurions conclu qu’elle
+correspondait à une taille d’effet minime (<span class="math inline">\(d
+≈ 0,11\)</span>).</p>
+<hr />
+</div>
+</div>
+<div id="test-t-à-deux-échantillons-indépendants" class="section level2"
+number="1.4">
+<h2><span class="header-section-number">1.4</span> Test-t à deux
+échantillons indépendants</h2>
+<p>Pour ce test, nous souhaitons comparer les moyennes de deux
+échantillons composés d’observations différentes (aka. des observations
+indépendantes). Généralement, ce test implique donc une VD continue et
+une VI catégorielle dichotomique permettant de diviser l’échantillon en
+deux. L’exemple que nous utiliserons sera la différence d’émotions
+positives après l’intervention (<code>emotionPositive_Post</code>) selon
+le genre (<code>genre</code>). Autrement dit, nous cherchons à savoir si
+les hommes et les femmes diffèrent dans leurs émotions positives après
+l’intervention psychosociale. Voici le test d’hypothèse que nous posons
+:</p>
+<p><span class="math display">\[
+H_0 : \mu_{h}  = \mu_{f}\\
+H_1 : \mu_{h}  ≠ \mu_{f}\\
+\]</span></p>
+<p>Et voici à quoi pourrait ressembler une représentation graphique de
+ce test d’hypothèses :</p>
+<pre class="r"><code>ggplot(df, aes(x = emotionPositive_Post, fill = genre)) + 
+    geom_density(alpha = .5) + 
+    labs(x = &quot;Émotion positives&quot;, y = &quot;Densité&quot;) +
+    geom_vline(lty = 2, col = 2,
+        xintercept = mean(df$emotionPositive_Post[df$genre == &quot;Homme&quot;])) +
+    geom_vline(lty = 2, col = 4,
+        xintercept = mean(df$emotionPositive_Post[df$genre == &quot;Femme&quot;])) +
+    theme_classic()</code></pre>
+<p><img src="Test-t_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
+<p><em>Note</em>: J’aurais pu utiliser un boxplot mais, dans ce cas-ci,
+je trouve la courbe de densité plus parlante.</p>
+<p>Ce graphique s’interprète de la même manière qu’un histogramme. Il
+présente les distributions d’émotions positives chez les hommes et les
+femmes et illustre la différence entre la moyenne des hommes (ligne
+pointillée rouge) et celle des femmes (ligne pointillée bleue).</p>
+<hr />
+<div id="postulats-2" class="section level3" number="1.4.1">
+<h3><span class="header-section-number">1.4.1</span> Postulats</h3>
+<p>Voici les postulats du test-t à échantillons indépendants :</p>
+<ol style="list-style-type: decimal">
+<li>La variable est continue : ☑<br />
+</li>
+<li>Les observations sont indépendantes : ☑</li>
+<li>La variable doit être normalement distribuée dans les deux
+échantillons : à vérifier</li>
+</ol>
+<p>Nous devons vérifier la normalité à l’aide du test de normalité
+<em>dans chaque échantillon</em>. Pour ce faire, je vous recommande de
+commencer par diviser votre échantillon à l’aide de la fonction
+<code>subset()</code> :</p>
+<pre class="r"><code>df_homme &lt;- subset(df, subset = genre == &quot;Homme&quot;)
+df_femme &lt;- subset(df, subset = genre == &quot;Femme&quot;)</code></pre>
+<p>La fonction <code>subset()</code> retourne un sous-ensemble à partir
+d’une banque de données (<code>df</code>) et une condition logique
+(<code>genre == "Homme</code> ou <code>genre == Femme</code>). La
+syntaxe ci-dessus permet donc de générer deux nouvelles banques de
+données, <code>df_homme</code> et <code>df_femme</code>, contenant
+uniquement les hommes et les femmes respectivement. On peut donc
+vérifier la normalité à l’aide du test Shapiro-Wilk dans chacun de ces
+sous-échantillons :</p>
+<pre class="r"><code>shapiro.test(df_homme$emotionPositive_Post)</code></pre>
+<pre><code>## 
+##  Shapiro-Wilk normality test
+## 
+## data:  df_homme$emotionPositive_Post
+## W = 0.97998, p-value = 0.862</code></pre>
+<pre class="r"><code>shapiro.test(df_femme$emotionPositive_Post)</code></pre>
+<pre><code>## 
+##  Shapiro-Wilk normality test
+## 
+## data:  df_femme$emotionPositive_Post
+## W = 0.98108, p-value = 0.3422</code></pre>
+<p>On observe que nos deux échantillons respectent le postulat de
+normalité (<span class="math inline">\(W_h ≈ ,98; p &gt; ,05; W_f ≈ ,98;
+p &gt; ,05\)</span>). Nous pouvons donc procéder avec le test-t.</p>
+<hr />
+</div>
+<div id="faire-le-test-2" class="section level3" number="1.4.2">
+<h3><span class="header-section-number">1.4.2</span> Faire le test</h3>
+<p>La syntaxe pour ce test diffère légèrement du test précédent. D’une
+part, nous utilisons une formule pour déclarer les variables utilisées.
+La formule <code>df$emotionPositive_Post ~ df$genre</code> signifie que
+la variable <code>emotionPositive_Post</code> est estimée
+(<code>~</code>) à l’aide de la variable <code>genre</code>.</p>
+<pre class="r"><code>t.test(df$emotionPositive_Post ~ df$genre,
+       alternative = &quot;two.sided&quot;)</code></pre>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  df$emotionPositive_Post by df$genre
+## t = 0.73233, df = 38.011, p-value = 0.4685
+## alternative hypothesis: true difference in means between group Homme and group Femme is not equal to 0
+## 95 percent confidence interval:
+##  -2.07506  4.42735
+## sample estimates:
+## mean in group Homme mean in group Femme 
+##            28.88889            27.71274</code></pre>
+<p>Ce output nous indique que la différence de moyennes entre les hommes
+et les femmes ne diffère pas significativement de 0 (<span
+class="math inline">\(t(38,01) ≈ 0,73; p &gt; ,05\)</span>).</p>
+<hr />
+</div>
+<div id="calculer-la-taille-deffet-2" class="section level3"
+number="1.4.3">
+<h3><span class="header-section-number">1.4.3</span> Calculer la taille
+d’effet</h3>
+<p>Puisque le test-t n’est pas significatif, la taille d’effet n’est pas
+interprétable. Toutefois, pour les besoins de ce guide, je vous montre
+tout de même comment obtenir la taille d’effet dans le contexte d’un
+test-t à échantillons indépendants. Pour ce faire, vous devrez noter la
+taille d’échantillon de chaque sous-groupes. Je vous conseil d’utiliser
+la fonction <code>frq()</code> du package <code>sjmisc</code> comme ceci
+:</p>
+<pre class="r"><code>library(sjmisc)
+frq(df$genre)</code></pre>
+<pre><code>## x &lt;categorical&gt; 
+## # total N=100 valid N=100 mean=1.73 sd=0.45
+## 
+## Value |  N | Raw % | Valid % | Cum. %
+## -------------------------------------
+## Homme | 27 |    27 |      27 |     27
+## Femme | 73 |    73 |      73 |    100
+## &lt;NA&gt;  |  0 |     0 |    &lt;NA&gt; |   &lt;NA&gt;</code></pre>
+<p>Notre échantillon totale comprend donc 23 hommes et 73 femmes. Nous
+pouvons maintenant obtenir la taille d’effet à l’aide de la syntaxe
+suivante :</p>
+<pre class="r"><code>library(psych)
+t2d(abs(0.73233), n1 = 27, n2 = 73) </code></pre>
+<pre><code>## [1] 0.1649543</code></pre>
+<p><em>Note</em>: la fonction <code>abs()</code> est inutile ici mais je
+la garde pour que vous puissiez copier-coller.</p>
+<p>Comme mentionnez précédemment, la différence d’émotions positives
+observée entre les hommes et les femmes après l’intervention n’était pas
+significative. Cela dit, si elle l’avait été, nous aurions conclu
+qu’elle correspond à une taille d’effet minime (<span
+class="math inline">\(d ≈ 0,16\)</span>).</p>
+<hr />
+</div>
+</div>
+</div>
+<div id="test-u-mann-whitney" class="section level1" number="2">
+<h1><span class="header-section-number">2</span> Test U
+Mann-Whitney</h1>
+<p>Le test-U de Mann-Whitney (ou test Wilcoxon à deux échantillons) est
+souvent présenté comme une version « robuste » du test-t à échantillons
+indépendants. Autrement dit, ce test est utilisé lorsque le postulat de
+normalité n’est pas respecté. L’hypothèse vérifiée par le test-U
+Mann-Whitney est que la probabilité qu’une observation de la population
+X dépasse une observation de la population Y est différente (plus grande
+ou plus petite) que la probabilité qu’une observation de Y dépasse une
+observation de X.</p>
+<p>Pour cet exemple, nous utiliserons le niveau d’émotions positives
+avant l’intervention entre le groupe sélectionné pour l’intervention
+(<code>Y</code>) et le groupe contrôle (<code>X</code>). Voici
+l’hypothèse que nous posons :<br />
+<span class="math display">\[
+H_0 : P(X &gt; Y) = P(X &lt; Y) \\
+H_1 : P(X &gt; Y) \neq P(X &lt; Y) \\
+\]</span></p>
+<hr />
+<div id="postulats-3" class="section level2" number="2.1">
+<h2><span class="header-section-number">2.1</span> Postulats</h2>
+<p>Voici les postulats du test U de Mann-Whitney :</p>
+<ol style="list-style-type: decimal">
+<li>Les variables sont au moins ordinales (c.-à-d. qu’on peut au moins
+dire, de deux observations, quelle est la plus grande) : ☑<br />
+</li>
+<li>Les observations sont indépendantes : ☑</li>
+</ol>
+<hr />
+</div>
+<div id="faire-le-test-3" class="section level2" number="2.2">
+<h2><span class="header-section-number">2.2</span> Faire le test</h2>
+<p>La fonction <code>wilcox.test()</code> permet d’exécuter le test U
+Mann-Whitney. La fonction porte le nom de Wilcoxon parce que le test U
+constitue une généralisation du test de la Somme des Rangs de Wilcoxon
+(<em>Wilcoxon Rank Sum test</em>), qui est applicable à un seul
+échantillon ou à des échantillons jumelés. Voici la syntaxe :</p>
+<pre class="r"><code>wilcox.test(df$emotionPositive_Pre ~ df$intervention)</code></pre>
+<pre><code>## 
+##  Wilcoxon rank sum test with continuity correction
+## 
+## data:  df$emotionPositive_Pre by df$intervention
+## W = 1104, p-value = 0.3216
+## alternative hypothesis: true location shift is not equal to 0</code></pre>
+<p>Ce output nous indique qu’on ne peut pas conclure au rejet de
+l’hypothèse nulle voulant que la distribution d’émotion positive
+différait significativement entre les groupes avant l’intervention
+(<span class="math inline">\(W = 1104; p &gt; ,05\)</span>).</p>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Xavier La Rochelle" />
+
+<meta name="date" content="2023-11-22" />
+
+<title>Préparer les données</title>
+
+<script src="site_libs/header-attrs-2.20/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/yeti.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">À propos</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="content.html">Projets</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Tutoriels R
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="script_rmarkdown.html">Rédiger un script RMarkdown</a>
+    </li>
+    <li>
+      <a href="packages.html">Installer et activer des packages</a>
+    </li>
+    <li>
+      <a href="importer_les_donnees.html">Importer les données</a>
+    </li>
+    <li>
+      <a href="preparer_les_donnees.html">Préparer les données</a>
+    </li>
+    <li>
+      <a href="visualiser_les_donnees.html">Visualiser les données</a>
+    </li>
+    <li>
+      <a href="comparaison_de_moyennes.html">Comparer des moyennes</a>
+    </li>
+    <li>
+      <a href="Correlation.html">Corrélation de Pearson et de Spearman</a>
+    </li>
+    <li>
+      <a href="test-t.html">Test-t et test U Mann-Whitney</a>
+    </li>
+    <li>
+      <a href="ANOVA.html">ANOVA et test de Kruskal-Wallis</a>
+    </li>
+    <li>
+      <a href="Chi-carré.html">Chi-carré et méthode exact de Fisher</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Préparer les données</h1>
+<h4 class="author">Xavier La Rochelle</h4>
+<h4 class="date">2023-11-22</h4>
+
+</div>
+
+
+<style type="text/css">
+pre code {
+  white-space: pre;
+}
+</style>
+<hr />
+<p><strong><em>Important :</em></strong> Ce guide assume que vous savez
+comment :</p>
+<ol style="list-style-type: decimal">
+<li><a href="script_rmarkdown.html">Rédiger un script
+RMarkdown</a><br />
+</li>
+<li><a href="packages.html">Installer et activer des packages</a><br />
+</li>
+<li><a href="importer_les_donnees.html">Importer une base de
+données</a></li>
+</ol>
+<p>Vous pouvez cliquer sur les liens ci-dessus pour consulter les guides
+associées.</p>
+<hr />
+<div id="péparation" class="section level2" number="0.1">
+<h2><span class="header-section-number">0.1</span> Péparation</h2>
+<p>Dans le dernier guide (<a href="importer_les_donnees.html">Importer
+une base de données</a>), nous avons appris comment importer une banque
+de données dans R. À des fins de démonstrations, nous utiliserons la
+même banque de données dans ce guide.</p>
+<p>Pour suivre cette démonstration, vous devez préalablement :</p>
+<ol style="list-style-type: decimal">
+<li>télécharger le fichier de données
+(<code>RCC-5323-F-2020-SM_F1.csv</code>) ainsi que la documentation
+Odesi concernant son contenu (<code>RCC-5323-F-2020-SM.pdf</code>). Ces
+documents sont disponibles sur Studium. Voici comment y accéder :</li>
+</ol>
+<p><code>Ateliers R</code> &gt;
+<code>Données pour les exemples</code></p>
+<ol start="2" style="list-style-type: decimal">
+<li>importer le fichier de données dans R (aka. assigner
+<code>RCC-5323-F-2020-SM_F1.csv</code> à l’objet
+<code>donnees_brutes</code>). Voici la syntaxe nécessaire :</li>
+</ol>
+<pre class="r"><code>library(readr)
+donnees_brutes &lt;- read_csv(&quot;folder path&quot;)</code></pre>
+<p>Vous devriez donc avoir dans votre environnement l’objet
+<code>donnees_brutes</code>. On peut regarder à quoi ressemble cet objet
+en exécutant simplement son nom :</p>
+<pre class="r"><code>donnees_brutes</code></pre>
+<pre><code>## # A tibble: 45,989 × 6
+##    MH_05 DEM_10 ANXDVGAD PPROV PAGEGR ...6 
+##    &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;lgl&gt;
+##  1     3      2       11    35      6 NA   
+##  2     3      2        5    13      7 NA   
+##  3     1      1        0    12      4 NA   
+##  4     2      1       10    48      4 NA   
+##  5     3      2       11    59      7 NA   
+##  6     2      1        0    35      7 NA   
+##  7     2      1        0    59     10 NA   
+##  8     1      1        0    59     10 NA   
+##  9     4      2       12    35      8 NA   
+## 10     4      2       16    13      4 NA   
+## # … with 45,979 more rows</code></pre>
+<p>Le <em>output</em> ressemble bel et bien à un banque de données, ce
+qui est bon signe. On peut constater qu’elle comprend 45’989
+observations (les rangés) et 6 variables (les colonnes :
+<code>MH_05</code>, <code>DEM_10</code>, <code>ANXDVGAD</code>,
+<code>PPROV</code>, <code>PAGEGR</code> et <code>...6</code>).</p>
+<p><em>Note</em>: La 6ième colonne (<code>...6</code>) n’est pas
+vraiment une variable. Odesi semble toujours ajouter une colonne
+supplémentaire rempli de données manquantes (<code>NA</code>). Vous
+pouvez l’ignorer.</p>
+<hr />
+</div>
+<div id="les-formats-et-les-types-de-variables" class="section level2"
+number="0.2">
+<h2><span class="header-section-number">0.2</span> Les formats et les
+types de variables</h2>
+<p>Lorsqu’on travail avec des variables dans R, il est bon de savoir
+distinguer leur <strong>format</strong> (propriété informatique) et leur
+<strong>type</strong> (propriété théorique).</p>
+<hr />
+<div id="format-de-variable" class="section level3" number="0.2.1">
+<h3><span class="header-section-number">0.2.1</span> Format de
+variable</h3>
+<p>Le format indique de quelle manière les variables sont codées dans R.
+Lorsque vous afficher un <code>tibble</code> (comme on l’a fait dans la
+section précédente), les caractères directement en dessous du nom des
+variables (entourés de <code>&lt;&gt;</code>) vous informent sur le
+<strong>format</strong> de vos variables. Il existe plusieurs formats de
+variables dans R (ex.: logique <code>&lt;lgl&gt;</code>, entier
+<code>&lt;int&gt;</code>, etc.). Pour les besoins du cours, on va
+seulement utiliser deux formats, soit numérique
+(<code>&lt;dbl&gt;</code> pour <code>double</code> ou
+<code>numeric</code>) et catégoriel (<code>&lt;fctr&gt;</code> pour
+<code>factor</code>).</p>
+<p>Sachez qu’il est possible de coder des variables de classe ordinale
+<code>&lt;ord&gt;</code> dans R. Cela étant dit, ce type de variable est
+rarement utilisé puisqu’il fait l’objet d’une certaine ambiguïté en
+statistique (souvent traité comme continue dépendemment du nombre de
+catégories). Soulignons également qu’il n’existe pas de format
+particulier pour désigner les variables à intervalle dans R.</p>
+<hr />
+</div>
+<div id="type-de-variable" class="section level3" number="0.2.2">
+<h3><span class="header-section-number">0.2.2</span> Type de
+variable</h3>
+<p>Lorsque vous travaillez dans R (ou lorsque vous faites des analyses
+quantitatives en général), c’est <strong>votre</strong> responsabilité
+de connaître (ou déterminer) le type des variables que vous utilisez. Le
+type d’une variable désigne son échelle de mesure. Le type «
+théoriquement approprié » d’une variable est parfois difficile à
+déterminer et plusieurs variables en psychologie se situent à la limite
+entre le continue et le discret/catégoriel (ex.: échelle de Likert à 7
+ancrages).</p>
+<p>Par ailleurs, les deux formats que nous utiliserons dans R
+(<code>&lt;fctr&gt;</code> et <code>&lt;dbl&gt;</code>) ne permettent
+pas de représenter parfaitement les quatre échelles de mesure décrites
+dans votre manuel (<a
+href="https://canadacommons.ca/artifacts/1882749/statistiques/2631904/view/">Haccoun
+et Cousineau, 2010</a>, p. 20 à 26). Pour des raisons pratiques, nous
+ferons simplement la distinction entre les variables de type 1
+(<strong>discrète</strong> = format catégoriel
+<code>&lt;fctr&gt;</code>) et les variables de type 2
+(<strong>continue</strong> = format numérique
+<code>&lt;dbl&gt;</code>).</p>
+<p>Dans le contexte de votre TP, vous aurez accès à la documentation
+Odesi, qui vous indique comment les créateurs de la banque de données
+que vous utilisez ont définies les variables qui s’y trouvent. Par
+exemple :</p>
+<p><img src="images/types.png" /></p>
+<p>La documentation représente un bon guide pour déterminer le type de
+vos variable. Cela étant dit, je vous déconseil de vous fier aveuglément
+à la documentation puisque ces étiquettes sont parfois tinter de
+subjectivité. D’une part, il est bon de développer un esprit critique
+par rapport aux propriétés des variables qu’on utilise en recherche.
+D’autre part, la documentation Odesi ne fait pas de distinction entre
+les sous-types de variables discrètes (<em>nominale</em> et
+<em>ordinale</em>) et continues (<em>à intervalles</em> et <em>de
+rapport</em>). Dans votre TP, <strong>vous devrez quand même mentionner
+les échelles de mesure précises</strong> dans la description de vos
+variables.</p>
+<hr />
+</div>
+</div>
+<div id="problèmes-avec-la-banque-de-données-brutes"
+class="section level2" number="0.3">
+<h2><span class="header-section-number">0.3</span> Problèmes avec la
+banque de données brutes</h2>
+<p>La banque de données qu’on vient d’assigner à l’objet
+<code>donnees_brutes</code> n’est pas encore formatée convenablement.
+Voici quelques problèmes reliés au format de la banque de données brutes
+:</p>
+<ul>
+<li><strong>Les données manquantes ne sont pas identifiées comme
+telle</strong><br />
+</li>
+<li>Il y a une sixième colonne complètement vide (je ne sais pas
+pourquoi)<br />
+</li>
+<li>Les variables ne sont pas clairement identifiées</li>
+<li>Les variables nominales sont en format <code>&lt;dbl&gt;</code>
+(continue) et les valeurs sont en chiffres</li>
+</ul>
+<p>Ces problèmes au niveau du format de vos données rendent
+l’interprétation de vos résultat plus difficile et pourraient même
+entraîner des erreurs dans vos analyses (ex.: données manquantes). Pour
+y remédier, on va construire une nouvelle banque de données « propre »
+dans laquelle on va inclure toutes nos variables reformatées
+correctement.</p>
+<hr />
+</div>
+<div id="créer-la-banque-de-données-propre" class="section level1"
+number="1">
+<h1><span class="header-section-number">1</span> Créer la banque de
+données propre</h1>
+<p>La première étape consiste à créer la structure de base de notre
+banque de données propre. Pour ce faire, nous aurons besoin d’activer le
+package <code>tibble</code>. Voici la syntaxe complète :</p>
+<pre class="r"><code>library(tibble)
+df &lt;- tibble(id = 1:nrow(donnees_brutes))</code></pre>
+<p>Je vous rassure tout de suite : <em>vous n’avez pas besoin de
+comprendre tous les petits détails de la deuxième ligne</em>. Il est
+suffisant de comprendre est que cette syntaxe <strong>assigne</strong>
+(avec l’opérateur <code>&lt;-</code>) tout ce qu’il y a à droite de
+l’opérateur (<code>tibble(id = 1:nrow(donnees_brutes))</code>) à un
+nouvel objet qu’on choisi d’appeller <code>df</code>.</p>
+<p>Pour ceux qui souhaitent comprendre la partie à droite de l’opérateur
+<code>&lt;-</code>, la section suivante fournie une brève explication.
+Si ça ne vous intéresse pas, vous pouvez aller directement à la section
+2.</p>
+<hr />
+<div id="explications-supplémentaires" class="section level2"
+number="1.1">
+<h2><span class="header-section-number">1.1</span> Explications
+supplémentaires</h2>
+<p><code>tibble(id = 1:nrow(donnees_brutes))</code></p>
+<p>Le code ci-dessus combine deux fonctions (<code>nrow()</code> et
+<code>as_tibble()</code>) et deux opérateurs R (<code>=</code> et
+<code>:</code>) pour de répondre à deux sous-objectifs précis :</p>
+<ol style="list-style-type: decimal">
+<li><strong>Créer un</strong> <code>tibble</code></li>
+</ol>
+<p>La fonction <code>tibble()</code> retourne un objet de type
+<code>tibble</code>, ce qui correspond à un type de
+<code>data frame</code> (ou « banque de données ») ayant certaines
+propriétés particulièrement utiles lorsqu’on travaille en
+<code>rmarkdown</code>. Par exemple, lorsqu’on affiche une banque de
+données, un objet de type <code>tibble</code> spécifie le format des
+variables et limite le output à 10 observations, ce qui n’est pas le cas
+pour un simple <code>data frame</code> :</p>
+<pre class="r"><code>data.frame(id = 1:24)</code></pre>
+<pre><code>##    id
+## 1   1
+## 2   2
+## 3   3
+## 4   4
+## 5   5
+## 6   6
+## 7   7
+## 8   8
+## 9   9
+## 10 10
+## 11 11
+## 12 12
+## 13 13
+## 14 14
+## 15 15
+## 16 16
+## 17 17
+## 18 18
+## 19 19
+## 20 20
+## 21 21
+## 22 22
+## 23 23
+## 24 24</code></pre>
+<pre class="r"><code>tibble(id = 1:24)</code></pre>
+<pre><code>## # A tibble: 24 × 1
+##       id
+##    &lt;int&gt;
+##  1     1
+##  2     2
+##  3     3
+##  4     4
+##  5     5
+##  6     6
+##  7     7
+##  8     8
+##  9     9
+## 10    10
+## # … with 14 more rows</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li><strong>Créer une variable d’identification</strong></li>
+</ol>
+<p>La syntaxe <code>id = 1:nrow(donnees_brutes)</code> génère la
+variable <code>id</code>, qui correspond à une suite de nombres entiers
+allant de 1 à 45’989. Plus spécifiquement, la fonction
+<code>nrow(donnees_brutes)</code> assure que votre variable
+d’identification <code>id</code> aura toujours le même nombre
+d’observations que votre banque de données brutes.</p>
+<pre class="r"><code>nrow(donnees_brutes)</code></pre>
+<pre><code>## [1] 45989</code></pre>
+<p>Avoir une variable qui représente chaque observation individuellement
+(<code>id</code>) est parfois nécessaire pour utiliser des fonctions. De
+plus, les étapes suivantes nécessitent que votre nouvelle banque de
+données <code>df</code> soit exactement de la même longueur que votre
+banque de données brutes <code>donnees_brutes</code>.</p>
+<hr />
+</div>
+</div>
+<div id="manipulation-de-variables" class="section level1" number="2">
+<h1><span class="header-section-number">2</span> Manipulation de
+variables</h1>
+<p>Les deux prochaines sections (2.1 et 2.2) visent à vous familiariser
+avec la manipulation de variables dans R. Les deux sous-sections
+suivantes présenteront la syntaxe nécessaire pour inclure</p>
+<hr />
+<div id="lopérateur" class="section level2" number="2.1">
+<h2><span class="header-section-number">2.1</span> L’opérateur
+<code>$</code></h2>
+<p>Ça me semble un bon moment pour introduire l’opérateur de sélection
+<code>$</code>, un outil très pratique lorsqu’on travail avec des objets
+de type <code>data frame</code>. Certaines fonctions (ex.:
+<code>frq()</code>, que nous verrons dans la prochaine section)
+s’appliquent principalement à des variables, donc il est bon de savoir
+comment y référer directement. L’opérateur <code>$</code> doit être
+placé directement après le nom de votre banque de données, ce qui vous
+permet de sélectionner la variable qu’il contient. Voici comment faire
+:</p>
+<pre class="r"><code>banque_de_donnees$variable</code></pre>
+<hr />
+</div>
+<div id="observer-une-variable-dans-r" class="section level2"
+number="2.2">
+<h2><span class="header-section-number">2.2</span> Observer une variable
+dans R</h2>
+<p>Afficher une variable est légèrement plus complexe qu’afficher une
+banque de données. Il n’est généralement pas très utile de simplement
+appeller le nom d’une variable pour l’afficher puisque faire cette
+commande affiche littéralement <em>toute</em> la variable. Par exemple
+:</p>
+<pre class="r"><code>x &lt;- 1:500 # traduction : la variable x est égale à une suite d&#39;entiers allant 1 à 500
+
+x # Afficher</code></pre>
+<pre><code>##   [1]   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18
+##  [19]  19  20  21  22  23  24  25  26  27  28  29  30  31  32  33  34  35  36
+##  [37]  37  38  39  40  41  42  43  44  45  46  47  48  49  50  51  52  53  54
+##  [55]  55  56  57  58  59  60  61  62  63  64  65  66  67  68  69  70  71  72
+##  [73]  73  74  75  76  77  78  79  80  81  82  83  84  85  86  87  88  89  90
+##  [91]  91  92  93  94  95  96  97  98  99 100 101 102 103 104 105 106 107 108
+## [109] 109 110 111 112 113 114 115 116 117 118 119 120 121 122 123 124 125 126
+## [127] 127 128 129 130 131 132 133 134 135 136 137 138 139 140 141 142 143 144
+## [145] 145 146 147 148 149 150 151 152 153 154 155 156 157 158 159 160 161 162
+## [163] 163 164 165 166 167 168 169 170 171 172 173 174 175 176 177 178 179 180
+## [181] 181 182 183 184 185 186 187 188 189 190 191 192 193 194 195 196 197 198
+## [199] 199 200 201 202 203 204 205 206 207 208 209 210 211 212 213 214 215 216
+## [217] 217 218 219 220 221 222 223 224 225 226 227 228 229 230 231 232 233 234
+## [235] 235 236 237 238 239 240 241 242 243 244 245 246 247 248 249 250 251 252
+## [253] 253 254 255 256 257 258 259 260 261 262 263 264 265 266 267 268 269 270
+## [271] 271 272 273 274 275 276 277 278 279 280 281 282 283 284 285 286 287 288
+## [289] 289 290 291 292 293 294 295 296 297 298 299 300 301 302 303 304 305 306
+## [307] 307 308 309 310 311 312 313 314 315 316 317 318 319 320 321 322 323 324
+## [325] 325 326 327 328 329 330 331 332 333 334 335 336 337 338 339 340 341 342
+## [343] 343 344 345 346 347 348 349 350 351 352 353 354 355 356 357 358 359 360
+## [361] 361 362 363 364 365 366 367 368 369 370 371 372 373 374 375 376 377 378
+## [379] 379 380 381 382 383 384 385 386 387 388 389 390 391 392 393 394 395 396
+## [397] 397 398 399 400 401 402 403 404 405 406 407 408 409 410 411 412 413 414
+## [415] 415 416 417 418 419 420 421 422 423 424 425 426 427 428 429 430 431 432
+## [433] 433 434 435 436 437 438 439 440 441 442 443 444 445 446 447 448 449 450
+## [451] 451 452 453 454 455 456 457 458 459 460 461 462 463 464 465 466 467 468
+## [469] 469 470 471 472 473 474 475 476 477 478 479 480 481 482 483 484 485 486
+## [487] 487 488 489 490 491 492 493 494 495 496 497 498 499 500</code></pre>
+<p>Il est donc préférable d’utiliser des fonctions spécialisées pour
+regarder nos variables. Comme vous pouvez l’imaginer, il existe une
+multitude de fonctions de ce type. Plusieurs fonctions mathématiques
+rudimentaires sont inclues au package R de base. Je mentionne également
+deux packages offrant des fonctions utiles à la description de variables
+: <code>sjmisc</code> et <code>jmv</code>.</p>
+<hr />
+<div id="statistiques-descriptives" class="section level3"
+number="2.2.1">
+<h3><span class="header-section-number">2.2.1</span> Statistiques
+descriptives</h3>
+<p>Le package R de base fourni plusieurs fonctions pour calculer les
+statistiques descriptives d’une variable. Par exemple, la fonction
+<code>mean()</code> permet d’obtenir la moyenne et la fonction
+<code>median()</code> la médiane. Voici quelques fonctions pratiques à
+retenir :</p>
+<ul>
+<li>Moyenne : <code>mean()</code><br />
+</li>
+<li>Médiane : <code>median()</code><br />
+</li>
+<li>Écart-type : <code>sd()</code><br />
+</li>
+<li>Variance : <code>var()</code><br />
+</li>
+<li>Minimum : <code>min()</code><br />
+</li>
+<li>Maximum : <code>max()</code></li>
+</ul>
+<p>Si vous utilisez les fonctions ci-dessus avec les variables de la
+banque de données brutes, vous remarquerez que les valeurs des
+statistiques descriptives du <em>output</em> sont différentes que celles
+que l’on retrouve dans la documentation Odesi. Par exemple :</p>
+<pre class="r"><code>mean(donnees_brutes$ANXDVGAD)</code></pre>
+<pre><code>## [1] 8.372894</code></pre>
+<pre class="r"><code>sd(donnees_brutes$ANXDVGAD)</code></pre>
+<pre><code>## [1] 11.9502</code></pre>
+<p><img src="images/desc.png" /></p>
+<p>Cette différence s’explique par le fait que les données manquantes
+(observations avec un score de <code>99</code>) n’ont pas encore été
+recodées correctement. Nous addresserons ce problème dans la section
+3.1.1 de ce guide.</p>
+<p>Il importe également de mentionner que les fonctions ci-dessus
+assument toutes que la variable que vous souhaitez décrire ne contient
+pas de données manquantes (<code>NA</code>). Si c’est le cas, elles
+retourneront <code>NA</code>. Par exemple :</p>
+<pre class="r"><code>variable_avec_NA &lt;- c(4, 9, NA, 17, 1)
+mean(variable_avec_NA)</code></pre>
+<pre><code>## [1] NA</code></pre>
+<pre class="r"><code>variable_sans_NA &lt;- c(4, 9, 2, 17, 1)
+mean(variable_sans_NA)</code></pre>
+<pre><code>## [1] 6.6</code></pre>
+<p>Pour utiliser ces fonctions sur une variable contenant des données
+manquantes, vous devez indiquer explicitement de retirer les données
+manquantes à l’aide de l’argument <code>na.rm =</code> (qui signifie «
+<em>NA remove</em> ») :</p>
+<pre class="r"><code>mean(variable_avec_NA, na.rm = TRUE) # Par défaut, na.rm = FALSE </code></pre>
+<pre><code>## [1] 7.75</code></pre>
+<hr />
+<p><strong>Fonction utile</strong><br />
+La fonction <code>descriptives</code> du package <code>jmv</code> permet
+(comme son nom l’indique) d’obtenir une panoplie de statistiques
+descriptives. Voici la syntaxe pour l’utiliser :</p>
+<pre class="r"><code>library(jmv)
+descriptives(donnees_brutes, ANXDVGAD)</code></pre>
+<p>Les statistiques que vous obtenez ci-dessus sont toujours inclues par
+défaut. Cela dit, vous pouvez facilement ajouter des arguments pour en
+obtenir d’autres. Par exemple, voici la syntaxe pour ajouter le mode au
+<em>output</em> :</p>
+<pre class="r"><code>descriptives(donnees_brutes, ANXDVGAD,
+             mode = TRUE)</code></pre>
+<p>Comme nous l’avons vue dans la section 3 du guide
+<code>package.html</code>, vous pouvez toujours consulter la liste
+complète des options que vous offre la fonction
+<code>descriptives()</code> en exécutant la commande
+<code>?descriptives()</code> dans la console.</p>
+<hr />
+</div>
+<div id="tableau-de-fréquence" class="section level3" number="2.2.2">
+<h3><span class="header-section-number">2.2.2</span> Tableau de
+fréquence</h3>
+<p>La fonction <code>frq()</code> fait partie du package
+<code>sjmisc</code> et permet d’obtenir le tableau des fréquences pour
+une variable. Cette fonction est particulièrement utile avec les
+variables discrètes, mais elle peut également être utilisée avec des
+variables continues. Voici la syntaxe pour obtenir le tableau des
+fréquences de la variable <code>PPROV</code> de la banque de données
+brutes :</p>
+<pre class="r"><code>library(sjmisc)
+frq(donnees_brutes$PPROV)</code></pre>
+<pre><code>## x &lt;numeric&gt; 
+## # total N=45989 valid N=45989 mean=36.63 sd=13.38
+## 
+## Value |     N | Raw % | Valid % | Cum. %
+## ----------------------------------------
+##    10 |   550 |  1.20 |    1.20 |   1.20
+##    11 |   208 |  0.45 |    0.45 |   1.65
+##    12 |  3140 |  6.83 |    6.83 |   8.48
+##    13 |   962 |  2.09 |    2.09 |  10.57
+##    24 |  5589 | 12.15 |   12.15 |  22.72
+##    35 | 22136 | 48.13 |   48.13 |  70.85
+##    46 |  1353 |  2.94 |    2.94 |  73.80
+##    47 |  1168 |  2.54 |    2.54 |  76.34
+##    48 |  3901 |  8.48 |    8.48 |  84.82
+##    59 |  6639 | 14.44 |   14.44 |  99.25
+##    63 |   343 |  0.75 |    0.75 | 100.00
+##  &lt;NA&gt; |     0 |  0.00 |    &lt;NA&gt; |   &lt;NA&gt;</code></pre>
+<p>Le <em>output</em> me montre du nombre d’observations (colonne
+<code>N</code>) pour chacune des valeurs (colonne <code>Value</code>) de
+la variable <code>PPROV</code>. Il fournit également la moyenne
+(<code>mean=36.63</code>) et l’écart-type (<code>sd=13.38</code>), deux
+statistiques qui ne font pas beaucoup de sens dans ce cas-ci puisque la
+variable qu’on observe est catégorielle (<code>PPROV</code> =
+<code>Province de résidence</code>).</p>
+<p>Je vous conseil de <strong>toujours utiliser la fonction
+<code>frq()</code> lorsque vous préparer vos données</strong>. Ce
+faisant, il est facile de vérifier la
+<em>validité</em>/<em>plausibilité</em> des différentes valeurs de vos
+variables — c.-à-d. qu’aucun score erroné ne s’est glissé dans la banque
+de données que vous utilisez. Par exemple, on peut effectuer cette
+vérification en comparant le <em>output</em> ci-dessus à la
+documentation Odesi concernant la variable <code>PPROV</code> :<br />
+<img src="images/frq.png" /></p>
+<p>Je peux ainsi confirmer que toutes les valeurs du tableau de
+fréquence généré précédemment semblent correctes. Je constate au passage
+que cette variable ne contient pas de données manquantes
+(<code>96</code>, <code>97</code>, <code>98</code> ou
+<code>99</code>).</p>
+<hr />
+</div>
+</div>
+</div>
+<div id="modifier-des-variables" class="section level1" number="3">
+<h1><span class="header-section-number">3</span> Modifier des
+variables</h1>
+<p>Cette section décrit comment remplir la nouvelle banque de données
+avec une version « corrigée » de chaque variable de la banque de données
+brutes. Normalement, à ce stade, les seuls objets que vous devriez avoir
+dans votre environnement sont les deux <code>data frame</code> que nous
+avons créés (<code>donnees_brutes</code> et <code>df</code>). Tel que
+mentionné à la section 0.2 de ce document, nous apprendrons seulement à
+créer des variables de type numérique <code>&lt;dbl&gt;</code> et
+catégorielle <code>&lt;fctr&gt;</code>.</p>
+<hr />
+<div id="variable-numérique-continue" class="section level2"
+number="3.1">
+<h2><span class="header-section-number">3.1</span> Variable numérique
+(continue)</h2>
+<p>Nous utiliserons la variable “Échelle de gravité de l’anxiété
+généralisée” (<code>ANXDVGAD</code>) à titre d’exemple. Voici un résumé
+rapide des informations importantes qu’on peut tirer de la documentation
+Odesi :</p>
+<ul>
+<li><strong>Type</strong>: continue<br />
+</li>
+<li><strong>Format</strong>: numeric (synonyme de
+<code>&lt;dbl&gt;</code> donc déjà correcte - Youpi!!!)<br />
+</li>
+<li><strong>Moyenne</strong>: 7.128<br />
+</li>
+<li><strong>Écart-type</strong>: 5.516<br />
+</li>
+<li><strong>Étendue</strong>: 0 - 21<br />
+</li>
+<li><strong>Valeurs assignées aux données manquantes</strong>:
+<code>96</code>, <code>97</code>, <code>98</code> ou
+<code>99</code></li>
+<li><strong>Nombre de données manquantes</strong>: 623</li>
+</ul>
+<p>Avant de passer à la prochaine étape, vérifions si les valeurs de la
+variable <code>ANXDVGAD</code> dans ma banque de données brutes sont
+valides :</p>
+<pre class="r"><code>frq(donnees_brutes$ANXDVGAD)</code></pre>
+<pre><code>## x &lt;numeric&gt; 
+## # total N=45989 valid N=45989 mean=8.37 sd=11.95
+## 
+## Value |    N | Raw % | Valid % | Cum. %
+## ---------------------------------------
+##     0 | 4271 |  9.29 |    9.29 |   9.29
+##     1 | 2795 |  6.08 |    6.08 |  15.36
+##     2 | 3330 |  7.24 |    7.24 |  22.61
+##     3 | 3590 |  7.81 |    7.81 |  30.41
+##     4 | 3479 |  7.56 |    7.56 |  37.98
+##     5 | 3359 |  7.30 |    7.30 |  45.28
+##     6 | 3315 |  7.21 |    7.21 |  52.49
+##     7 | 3515 |  7.64 |    7.64 |  60.13
+##     8 | 2408 |  5.24 |    5.24 |  65.37
+##     9 | 2105 |  4.58 |    4.58 |  69.94
+##    10 | 1804 |  3.92 |    3.92 |  73.87
+##    11 | 1638 |  3.56 |    3.56 |  77.43
+##    12 | 1446 |  3.14 |    3.14 |  80.57
+##    13 | 1328 |  2.89 |    2.89 |  83.46
+##    14 | 1320 |  2.87 |    2.87 |  86.33
+##    15 | 1033 |  2.25 |    2.25 |  88.58
+##    16 |  919 |  2.00 |    2.00 |  90.58
+##    17 |  852 |  1.85 |    1.85 |  92.43
+##    18 |  767 |  1.67 |    1.67 |  94.10
+##    19 |  660 |  1.44 |    1.44 |  95.53
+##    20 |  511 |  1.11 |    1.11 |  96.64
+##    21 |  921 |  2.00 |    2.00 |  98.65
+##    99 |  623 |  1.35 |    1.35 | 100.00
+##  &lt;NA&gt; |    0 |  0.00 |    &lt;NA&gt; |   &lt;NA&gt;</code></pre>
+<p>Le seul problème qu’on observe est que les données manquantes
+(<code>99</code>) ne sont pas considérées comme telle. La prochaine
+section explique comment corriger ce problème avant d’inclure la
+variable à notre banque de données propres.</p>
+<hr />
+<div id="données-manquantes" class="section level3" number="3.1.1">
+<h3><span class="header-section-number">3.1.1</span> Données
+manquantes</h3>
+<p>Garder les données manquantes en chiffre dans la banque de données
+propres invaliderait toutes les analyses subséquentes. Pour cette
+raison, il faut modifier la variable <code>ANXDVGAD</code> de manière à
+ce que les observations avec une valeur correspondant aux valeurs de
+données manquantes (selon le dictionnaire de données Odesi, ces valeurs
+sont <code>96</code>, <code>97</code>, <code>98</code> ou
+<code>99</code>) soient transformées en données manquantes
+(<code>NA</code>). On peut faire cela avec la syntaxe suivante :</p>
+<pre class="r"><code>donnees_brutes$ANXDVGAD_noMissing &lt;- ifelse(donnees_brutes$ANXDVGAD %in% c(96, 97, 98, 99),
+                                            NA,
+                                            donnees_brutes$ANXDVGAD)</code></pre>
+<p><strong>Explications sur la syntaxe</strong> :<br />
+On utilise la fonction <code>ifelse()</code> pour tester si chaque
+valeur de la variable <code>ANXDVGAD</code> est égale à 96, 97, 98 ou
+99. Si c’est le cas, on remplace cette valeur par <code>NA</code>
+(donnée manquante), sinon on conserve la valeur d’origine
+(<code>donnees_brutes$ANXDVGAD</code>). La syntaxe
+<code>donnees_brutes$ANXDVGAD %in% c(96, 97, 98, 99)</code> permet de
+vérifier si chaque valeur de la variable <code>ANXDVGAD</code> est
+présente dans le vecteur <code>c(96, 97, 98, 99)</code>. Si c’est le
+cas, la condition est vraie et la valeur est remplacée par
+<code>NA</code>.</p>
+<p>On peut vérifier si la modification a fonctionné en utilisant à
+nouveau la fonction <code>frq()</code> sur la nouvelle variable qu’on
+vient de créer <code>ANXDVGAD_noMissing</code> :</p>
+<pre class="r"><code>frq(donnees_brutes$ANXDVGAD_noMissing)</code></pre>
+<pre><code>## x &lt;numeric&gt; 
+## # total N=45989 valid N=45366 mean=7.13 sd=5.52
+## 
+## Value |    N | Raw % | Valid % | Cum. %
+## ---------------------------------------
+##     0 | 4271 |  9.29 |    9.41 |   9.41
+##     1 | 2795 |  6.08 |    6.16 |  15.58
+##     2 | 3330 |  7.24 |    7.34 |  22.92
+##     3 | 3590 |  7.81 |    7.91 |  30.83
+##     4 | 3479 |  7.56 |    7.67 |  38.50
+##     5 | 3359 |  7.30 |    7.40 |  45.90
+##     6 | 3315 |  7.21 |    7.31 |  53.21
+##     7 | 3515 |  7.64 |    7.75 |  60.96
+##     8 | 2408 |  5.24 |    5.31 |  66.27
+##     9 | 2105 |  4.58 |    4.64 |  70.91
+##    10 | 1804 |  3.92 |    3.98 |  74.88
+##    11 | 1638 |  3.56 |    3.61 |  78.49
+##    12 | 1446 |  3.14 |    3.19 |  81.68
+##    13 | 1328 |  2.89 |    2.93 |  84.61
+##    14 | 1320 |  2.87 |    2.91 |  87.52
+##    15 | 1033 |  2.25 |    2.28 |  89.79
+##    16 |  919 |  2.00 |    2.03 |  91.82
+##    17 |  852 |  1.85 |    1.88 |  93.70
+##    18 |  767 |  1.67 |    1.69 |  95.39
+##    19 |  660 |  1.44 |    1.45 |  96.84
+##    20 |  511 |  1.11 |    1.13 |  97.97
+##    21 |  921 |  2.00 |    2.03 | 100.00
+##  &lt;NA&gt; |  623 |  1.35 |    &lt;NA&gt; |   &lt;NA&gt;</code></pre>
+<p>Les valeurs arrêtent désormais à <code>21</code> et on compte 623
+<code>NA</code> (ce qui correspond au nombre de <code>99</code> avant la
+modification). Nous pouvons donc inclure cette variable à notre banque
+de données propre avec l’esprit tranquille. On peut profiter de cette
+opération pour donner un nom plus facile à se rappeler à notre variable
+:</p>
+<pre class="r"><code>df$anxiete &lt;- donnees_brutes$ANXDVGAD_noMissing</code></pre>
+<p>Voici désormais à quoi ressemble notre banque de données propre :</p>
+<pre class="r"><code>df</code></pre>
+<pre><code>## # A tibble: 45,989 × 2
+##       id anxiete
+##    &lt;int&gt;   &lt;dbl&gt;
+##  1     1      11
+##  2     2       5
+##  3     3       0
+##  4     4      10
+##  5     5      11
+##  6     6       0
+##  7     7       0
+##  8     8       0
+##  9     9      12
+## 10    10      16
+## # … with 45,979 more rows</code></pre>
+<hr />
+</div>
+</div>
+<div id="variable-catégorielle-discrète" class="section level2"
+number="3.2">
+<h2><span class="header-section-number">3.2</span> Variable catégorielle
+(discrète)</h2>
+<p>Nous utiliserons la variable “Échelle de gravité de l’anxiété
+généralisée” (<code>ANXDVGAD</code>) à titre d’exemple. Voici un résumé
+rapide des informations importantes qu’on peut tirer de la documentation
+Odesi :</p>
+<ul>
+<li><strong>Type</strong>: discrète<br />
+</li>
+<li><strong>Format</strong>: numeric (il va falloir changer ça)</li>
+<li><strong>Valeurs possibles</strong> :
+<ul>
+<li><code>10</code> = Terre-Neuve-et-Labrador<br />
+</li>
+<li><code>11</code> = Île-du-Prince-Édouard<br />
+</li>
+<li><code>12</code> = Nouvelle-Écosse<br />
+</li>
+<li><code>13</code> = Nouvea-Brunswick</li>
+<li><code>24</code> = Québec<br />
+</li>
+<li><code>35</code> = Ontario<br />
+</li>
+<li><code>46</code> = Manitoba<br />
+</li>
+<li><code>47</code> = Saskatchewan<br />
+</li>
+<li><code>48</code> = Alberta<br />
+</li>
+<li><code>59</code> = Colombie-Britanique<br />
+</li>
+<li><code>63</code> = Territoires<br />
+</li>
+</ul></li>
+<li><strong>Valeurs assignées aux données manquantes</strong>:
+<code>96</code>, <code>97</code>, <code>98</code> ou
+<code>99</code><br />
+</li>
+<li><strong>Nombre de données manquantes</strong>: 0 (Wouhou!!)</li>
+</ul>
+<p>On peut vérifier ces informations à l’aide de la fonction
+<code>frq()</code> :</p>
+<pre class="r"><code>frq(donnees_brutes$PPROV)</code></pre>
+<pre><code>## x &lt;numeric&gt; 
+## # total N=45989 valid N=45989 mean=36.63 sd=13.38
+## 
+## Value |     N | Raw % | Valid % | Cum. %
+## ----------------------------------------
+##    10 |   550 |  1.20 |    1.20 |   1.20
+##    11 |   208 |  0.45 |    0.45 |   1.65
+##    12 |  3140 |  6.83 |    6.83 |   8.48
+##    13 |   962 |  2.09 |    2.09 |  10.57
+##    24 |  5589 | 12.15 |   12.15 |  22.72
+##    35 | 22136 | 48.13 |   48.13 |  70.85
+##    46 |  1353 |  2.94 |    2.94 |  73.80
+##    47 |  1168 |  2.54 |    2.54 |  76.34
+##    48 |  3901 |  8.48 |    8.48 |  84.82
+##    59 |  6639 | 14.44 |   14.44 |  99.25
+##    63 |   343 |  0.75 |    0.75 | 100.00
+##  &lt;NA&gt; |     0 |  0.00 |    &lt;NA&gt; |   &lt;NA&gt;</code></pre>
+<p>La fonction <code>factor()</code> permet de créer une variable de
+type <code>factor</code> (facile à se rappeler!). La syntaxe suivante
+permet d’assigner le résultat de cette fonction à une nouvelle variable
+(<code>PPROV_F</code>) dans la banque de données
+<code>donnees_brutes</code> :</p>
+<pre class="r"><code>donnees_brutes$PPROV_F &lt;-  factor(donnees_brutes$PPROV, # Variable originale
+                                  
+                                  # Valeurs originales
+                                  levels = c(10,11,12,13,24,35,46,47,48,59,63), 
+                                  
+                                  # Nouvelles valeurs (Attention à l&#39;ordre!!!)
+                                  labels = c(&quot;Terre-Neuve-et-Labrador&quot;,
+                                             &quot;Île-du-Prince-Édouard&quot;,   
+                                             &quot;Nouvelle-Écosse&quot;,
+                                             &quot;Nouvea-Brunswick&quot;,
+                                             &quot;Québec&quot;,
+                                             &quot;Ontario&quot;,
+                                             &quot;Manitoba&quot;,
+                                             &quot;Saskatchewan&quot;,
+                                             &quot;Alberta&quot;,
+                                             &quot;Colombie-Britanique&quot;,
+                                             &quot;Territoires&quot;))</code></pre>
+<p><em>Rappel</em>: les parties de code précédées d’un <code>#</code>
+sont des commentaires, pas de la syntaxe! Voici la même syntaxe vide
+pour copier-coller :</p>
+<pre class="r"><code>donnees_brutes$variable_F &lt;- factor(donnees_brutes$variable,
+                                    levels = c(),
+                                    labels = c())</code></pre>
+<p>On peut afficher le résultat :</p>
+<pre class="r"><code>donnees_brutes</code></pre>
+<pre><code>## # A tibble: 45,989 × 8
+##    MH_05 DEM_10 ANXDVGAD PPROV PAGEGR ...6  ANXDVGAD_noMissing PPROV_F          
+##    &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;lgl&gt;              &lt;dbl&gt; &lt;fct&gt;            
+##  1     3      2       11    35      6 NA                    11 Ontario          
+##  2     3      2        5    13      7 NA                     5 Nouvea-Brunswick 
+##  3     1      1        0    12      4 NA                     0 Nouvelle-Écosse  
+##  4     2      1       10    48      4 NA                    10 Alberta          
+##  5     3      2       11    59      7 NA                    11 Colombie-Britani…
+##  6     2      1        0    35      7 NA                     0 Ontario          
+##  7     2      1        0    59     10 NA                     0 Colombie-Britani…
+##  8     1      1        0    59     10 NA                     0 Colombie-Britani…
+##  9     4      2       12    35      8 NA                    12 Ontario          
+## 10     4      2       16    13      4 NA                    16 Nouvea-Brunswick 
+## # … with 45,979 more rows</code></pre>
+<p>L’opération semble avoir fonctionnée. On peut donc inclure notre
+variable à la banque de données.</p>
+<pre class="r"><code>df$province &lt;- donnees_brutes$PPROV_F</code></pre>
+<p>Voici à quoi ressemble désormais notre banque de données propres
+:</p>
+<pre class="r"><code>df</code></pre>
+<pre><code>## # A tibble: 45,989 × 3
+##       id anxiete province           
+##    &lt;int&gt;   &lt;dbl&gt; &lt;fct&gt;              
+##  1     1      11 Ontario            
+##  2     2       5 Nouvea-Brunswick   
+##  3     3       0 Nouvelle-Écosse    
+##  4     4      10 Alberta            
+##  5     5      11 Colombie-Britanique
+##  6     6       0 Ontario            
+##  7     7       0 Colombie-Britanique
+##  8     8       0 Colombie-Britanique
+##  9     9      12 Ontario            
+## 10    10      16 Nouvea-Brunswick   
+## # … with 45,979 more rows</code></pre>
+<p>Pour vous exercer, vous pouvez compléter la banque de données propre
+en incluant le reste des variables.</p>
+<hr />
+<p><strong><em>À noter pour le TP :</em></strong><br />
+Dans votre travail pratique, vous n’aurez <strong>pas besoin de
+présenter et expliquer les étapes nécessaires pour préparer vos
+données</strong>. Le code nécessaire pour importer les données sera
+simplement inclu au bloc de code <code>setup</code> au tout début de
+votre script <code>.Rmd</code>. Ce bloc de code ne s’affiche pas dans le
+document final à cause de l’argument <code>include=FALSE</code> dans les
+paramètres du bloc. Pour plus de détails, veuillez consulter la section
+3.1 du guide <a href="script_rmarkdown.html">Rédiger un script
+RMarkdown</a>.</p>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

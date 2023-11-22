@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Xavier La Rochelle" />
+
+<meta name="date" content="2023-11-22" />
+
+<title>Importer les données</title>
+
+<script src="site_libs/header-attrs-2.20/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/yeti.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">À propos</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="content.html">Projets</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Tutoriels R
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="script_rmarkdown.html">Rédiger un script RMarkdown</a>
+    </li>
+    <li>
+      <a href="packages.html">Installer et activer des packages</a>
+    </li>
+    <li>
+      <a href="importer_les_donnees.html">Importer les données</a>
+    </li>
+    <li>
+      <a href="preparer_les_donnees.html">Préparer les données</a>
+    </li>
+    <li>
+      <a href="visualiser_les_donnees.html">Visualiser les données</a>
+    </li>
+    <li>
+      <a href="comparaison_de_moyennes.html">Comparer des moyennes</a>
+    </li>
+    <li>
+      <a href="Correlation.html">Corrélation de Pearson et de Spearman</a>
+    </li>
+    <li>
+      <a href="test-t.html">Test-t et test U Mann-Whitney</a>
+    </li>
+    <li>
+      <a href="ANOVA.html">ANOVA et test de Kruskal-Wallis</a>
+    </li>
+    <li>
+      <a href="Chi-carré.html">Chi-carré et méthode exact de Fisher</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Importer les données</h1>
+<h4 class="author">Xavier La Rochelle</h4>
+<h4 class="date">2023-11-22</h4>
+
+</div>
+
+
+<hr />
+<p><strong><em>Important :</em></strong> Ce guide assume que vous savez
+comment :</p>
+<ol style="list-style-type: decimal">
+<li><a href="script_rmarkdown.html">Rédiger un script
+RMarkdown</a><br />
+</li>
+<li><a href="packages.html">Installer et activer des packages</a></li>
+</ol>
+<p>Vous pouvez cliquer sur les liens ci-dessus pour consulter les guides
+associées.</p>
+<hr />
+<p>Pour <em>analyser</em> des données, il faut tout d’abord
+<em>avoir</em> des données à analyser! Dans ce guide, nous allons
+apprendre comment importer un fichier de données de type
+<code>csv</code> dans R.</p>
+<p>L’acronyme <code>csv</code> signifie <em>Comma Separated
+Variables</em>. Je vous montre comment importer ce format en particulier
+car c’est un type de fichier très simple qui constitue en quelque sorte
+le « standard » pour le partage des banques de données en science —
+c.-à-d. des banques de données où les colonnes représentent des
+variables et les rangés représentent des observations. Sachez qu’il est
+possible (et généralement tout aussi facile) d’importer d’autres type de
+fichier de données dans R (ex.: Excel = <code>.xlsx</code>, SPSS =
+<code>.sav</code>).</p>
+<div id="avant-dimporter-fichier-odesi" class="section level2"
+number="0.1">
+<h2><span class="header-section-number">0.1</span> Avant d’importer :
+fichier Odesi</h2>
+<p>À titre d’exemple, je suis aller chercher une banque de données sur
+la plateforme Odesi (comme vous aurez à le faire pour votre TP). Le
+fichier de données (<code>RCC-5323-F-2020-SM_F1.csv</code>) ainsi que la
+documentation Odesi concernant son contenu
+(<code>RCC-5323-F-2020-SM.pdf</code>) sont disponibles sur Studium. Je
+vous invite à télécharger ces documents pour suivre cette démonstration.
+Voici comment y accéder :<br />
+<code>Ateliers R</code> &gt;
+<code>Importer et préparer les données (exemple)</code></p>
+<hr />
+</div>
+<div id="activer-readr" class="section level1" number="1">
+<h1><span class="header-section-number">1</span> Activer
+<code>readr</code></h1>
+<p>Nous aurons besoin d’activer le package <code>readr</code> puisqu’il
+plusieurs fonctions permettant de lire des fichiers de données.
+Spécifiquement, la fonction qui nous intéresse est
+<code>read_csv()</code>. Comme nous l’avons vue dans le guide
+<code>package.htlm</code>, la syntaxe suivante permet d’activer le
+package <code>readr</code>:</p>
+<pre class="r"><code>library(readr)</code></pre>
+<p>Une fois le package activé, il vous reste deux choses à faire pour
+importer votre base de données :</p>
+<ol style="list-style-type: decimal">
+<li><p>Identifier le <code>folder path</code> du fichier
+<code>.csv</code> dans votre ordinateur.</p></li>
+<li><p>Créer la banque de données brutes</p></li>
+</ol>
+<hr />
+</div>
+<div id="identifier-le-folder-path" class="section level1" number="2">
+<h1><span class="header-section-number">2</span> Identifier le
+<code>folder path</code></h1>
+<p>Le <code>folder path</code> est une <em>chaîne de caractères</em> (ou
+<code>string</code>) qui sert à indiquer à R où se trouve le fichier que
+vous voulez ouvrir dans les dossiers de votre ordinateur. Une manière de
+trouver le <code>folder path</code> spécifique à votre ordinateur est
+d’utiliser l’onglet <code>Files</code> dans la fenêtre en bas à droite
+dans RStudio. Voici les étapes à suivre :</p>
+<ul>
+<li><p>Localiser le fichier <code>csv</code> dans vos dossiers et
+sélectionner le (clic gauche).<br />
+<img src="images/folderPath1.png" /></p></li>
+<li><p>Sélectionner l’option <code>Import Dataset...</code>. <img
+src="images/folderPath2.png" /><br />
+</p></li>
+<li><p>Dans la section <code>File/URL:</code> de la fenêtre
+<code>Import Text Data</code> qui apparaît, copier-coller le
+<code>folder path</code> (chaîne de caractères entre guillemets
+<code>""</code>) <img src="images/folderPath3.png" /></p></li>
+</ul>
+<hr />
+</div>
+<div id="créer-la-banque-de-données-brutes" class="section level1"
+number="3">
+<h1><span class="header-section-number">3</span> Créer la banque de
+données brutes</h1>
+<p>Maintenant qu’on a le <code>folder path</code>, il est très facile de
+créer la banque de données brutes. Pour ce faire, il faut
+<strong>assigner</strong> (avec l’opérateur <code>&lt;-</code>) le
+contenu du fichier <code>csv</code> (à gauche de <code>&lt;-</code>) à
+un nouvel objet (à droite de <code>&lt;-</code>). Nous appellerons ce
+nouvel objet <code>donnees_brutes</code> par soucis de clarté. Voici la
+syntaxe (n’oubliez pas de remplacer le <code>folder path</code>!) :</p>
+<pre class="r"><code>donnees_brutes &lt;- read_csv(&quot;folder path&quot;) </code></pre>
+<p>On peut maintenant afficher l’objet qu’on vient de créer en appellant
+son nom :</p>
+<pre class="r"><code>donnees_brutes</code></pre>
+<pre><code>## # A tibble: 45,989 × 6
+##    MH_05 DEM_10 ANXDVGAD PPROV PAGEGR ...6 
+##    &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;lgl&gt;
+##  1     3      2       11    35      6 NA   
+##  2     3      2        5    13      7 NA   
+##  3     1      1        0    12      4 NA   
+##  4     2      1       10    48      4 NA   
+##  5     3      2       11    59      7 NA   
+##  6     2      1        0    35      7 NA   
+##  7     2      1        0    59     10 NA   
+##  8     1      1        0    59     10 NA   
+##  9     4      2       12    35      8 NA   
+## 10     4      2       16    13      4 NA   
+## # … with 45,979 more rows</code></pre>
+<p>Si vous obtenez le output ci-dessus, félicitation! Vous êtes prêt.e à
+passer au guide suivant (<code>preparation_de_donnees.html</code>).</p>
+<hr />
+<p><strong><em>À noter pour le TP :</em></strong> Dans votre travail
+pratique, vous n’aurez <strong>pas besoin de présenter et expliquer les
+étapes nécessaires pour importer vos données</strong>. Le code
+nécessaire pour importer les données sera simplement inclu au bloc de
+code <code>setup</code> au tout début de votre script <code>.Rmd</code>.
+Ce bloc de code ne s’affiche pas dans le document final à cause de
+l’argument <code>include=FALSE</code> dans les paramètres du bloc. Pour
+plus de détails, veuillez consulter la section 3.1 du guide <a
+href="script_rmarkdown.html">Rédiger un script RMarkdown</a>.</p>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
