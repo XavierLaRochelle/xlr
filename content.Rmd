@@ -16,3 +16,6 @@ output: html_document
 -   [Application pour étudier la distribution Dirichlet](https://xavierlarochelle.shinyapps.io/dirichlet/)
 
 -   [Application pour étudier les corrélations](https://xavierlarochelle.shinyapps.io/Correlation-app/)
+
+-   [Application pour visualiser une méthode de modéliser l'interaction entre deux mesures ordinales à trois niveaux de présences et de pertinences](https://xavierlarochelle.shinyapps.io/Interaction_Presence_Pertinence/)
+

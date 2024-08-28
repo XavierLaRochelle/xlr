@@ -11,11 +11,11 @@
 
 <meta name="author" content="Xavier La Rochelle" />
 
-<meta name="date" content="2023-11-22" />
+<meta name="date" content="2024-08-28" />
 
 <title>Préparer les données</title>
 
-<script src="site_libs/header-attrs-2.20/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.27/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/yeti.min.css" rel="stylesheet" />
@@ -31,7 +31,7 @@
        h6 {font-size: 12px;}
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
-<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
@@ -376,7 +376,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Préparer les données</h1>
 <h4 class="author">Xavier La Rochelle</h4>
-<h4 class="date">2023-11-22</h4>
+<h4 class="date">2024-08-28</h4>
 
 </div>
 
@@ -440,7 +440,7 @@ en exécutant simplement son nom :</p>
 ##  8     1      1        0    59     10 NA   
 ##  9     4      2       12    35      8 NA   
 ## 10     4      2       16    13      4 NA   
-## # … with 45,979 more rows</code></pre>
+## # ℹ 45,979 more rows</code></pre>
 <p>Le <em>output</em> ressemble bel et bien à un banque de données, ce
 qui est bon signe. On peut constater qu’elle comprend 45’989
 observations (les rangés) et 6 variables (les colonnes :
@@ -629,7 +629,7 @@ pour un simple <code>data frame</code> :</p>
 ##  8     8
 ##  9     9
 ## 10    10
-## # … with 14 more rows</code></pre>
+## # ℹ 14 more rows</code></pre>
 <ol start="2" style="list-style-type: decimal">
 <li><strong>Créer une variable d’identification</strong></li>
 </ol>
@@ -997,7 +997,7 @@ opération pour donner un nom plus facile à se rappeler à notre variable
 ##  8     8       0
 ##  9     9      12
 ## 10    10      16
-## # … with 45,979 more rows</code></pre>
+## # ℹ 45,979 more rows</code></pre>
 <hr />
 </div>
 </div>
@@ -1106,7 +1106,7 @@ pour copier-coller :</p>
 ##  8     1      1        0    59     10 NA                     0 Colombie-Britani…
 ##  9     4      2       12    35      8 NA                    12 Ontario          
 ## 10     4      2       16    13      4 NA                    16 Nouvea-Brunswick 
-## # … with 45,979 more rows</code></pre>
+## # ℹ 45,979 more rows</code></pre>
 <p>L’opération semble avoir fonctionnée. On peut donc inclure notre
 variable à la banque de données.</p>
 <pre class="r"><code>df$province &lt;- donnees_brutes$PPROV_F</code></pre>
@@ -1126,7 +1126,7 @@ variable à la banque de données.</p>
 ##  8     8       0 Colombie-Britanique
 ##  9     9      12 Ontario            
 ## 10    10      16 Nouvea-Brunswick   
-## # … with 45,979 more rows</code></pre>
+## # ℹ 45,979 more rows</code></pre>
 <p>Pour vous exercer, vous pouvez compléter la banque de données propre
 en incluant le reste des variables.</p>
 <hr />
